@@ -257,10 +257,13 @@
         <span class="db-tile-icon" style="background:#ede9fe;color:#7c3aed;">🔣</span>
         <span class="db-tile-label">公式速查</span>
       </button>
+ feature/昕旂-技術開發
       <button class="db-tile" id="tile-notes" data-module="notes">
         <span class="db-tile-icon" style="background:#fce7f3;color:#db2777;">📝</span>
         <span class="db-tile-label">學習筆記</span>
       </button>
+
+ main
     </div>
   </div>
 
@@ -328,7 +331,10 @@
       <div class="chapter-list" id="quiz-chapters"></div>
     </div>
     <!-- Step B: difficulty -->
+ feature/昕旂-技術開發
     <!-- Step B: difficulty -->
+
+ main
     <div id="quiz-step-diff" style="display:none;">
       <div class="sub-breadcrumb">
         <button class="crumb-back" id="btn-quiz-back-ch">← 重選章節</button>
@@ -341,6 +347,7 @@
         <button class="diff-btn" data-diff="高級">🔴 高級<span>挑戰題</span></button>
         <button class="diff-btn" data-diff="綜合">🔵 綜合<span>混合難度</span></button>
       </div>
+ feature/昕旂-技術開發
       <!-- Step B-Loading: AI 出題中 -->
       <div class="quiz-loading" id="quiz-loading">
         <div class="quiz-loading-spinner"></div>
@@ -352,6 +359,11 @@
     <div id="quiz-step-answering" style="display:none;">
       <!-- 10 題格點導航 -->
       <div class="quiz-dot-nav" id="quiz-dot-nav"></div>
+
+    </div>
+    <!-- Step C: answering -->
+    <div id="quiz-step-answering" style="display:none;">
+ main
       <div class="quiz-header-bar">
         <span id="quiz-progress-label">題目 1 / 10</span>
         <span id="quiz-ch-diff-label"></span>
@@ -370,8 +382,11 @@
         <div class="result-score-rate" id="result-rate">0%</div>
         <div class="result-score-msg" id="result-msg"></div>
       </div>
+ feature/昕旂-技術開發
       <!-- 正誤概覽格點 -->
       <div class="result-summary-row" id="result-summary-row"></div>
+
+ main
       <div id="result-detail"></div>
       <div style="text-align:center;margin-top:24px;">
         <button class="btn-primary" id="btn-quiz-again" style="max-width:240px;">再挑戰一次</button>
@@ -416,6 +431,7 @@
   <div class="sub-body" id="formula-body"></div>
 </div>
 
+ feature/昕旂-技術開發
 <!-- ══════════════════════════════════════════
      SCREEN 9 — 學習筆記 (placeholder)
 ══════════════════════════════════════════ -->
@@ -434,6 +450,8 @@
   </div>
 </div>
 
+
+ main
 <style>
 /* ═══════════════════════════════════════
    Dashboard styles
@@ -469,6 +487,18 @@
   grid-template-columns:repeat(3, 1fr);
   gap:14px;
 }
+ feature/昕旂-技術開發
+
+/* 五宮格：第 4、5 個按鈕置中於第 2 列 */
+.db-grid .db-tile:nth-child(4) { grid-column:1; }
+.db-grid .db-tile:nth-child(5) { grid-column:2; }
+@media (max-width:480px) {
+  .db-grid { grid-template-columns:repeat(2,1fr); }
+  .db-grid .db-tile:nth-child(4),
+  .db-grid .db-tile:nth-child(5) { grid-column:auto; }
+  .db-grid .db-tile:nth-child(5) { grid-column:1/-1; max-width:50%; justify-self:center; }
+}
+ main
 .db-tile {
   display:flex; flex-direction:column; align-items:center; gap:10px;
   padding:20px 12px 18px;
@@ -626,6 +656,7 @@
 .diff-btn span { font-size:.75rem; font-weight:400; color:var(--gray-600); }
 .diff-btn:hover { border-color:var(--primary); background:var(--primary-light); transform:translateY(-2px); }
 
+ feature/昕旂-技術開發
 .diff-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
 
 /* ─── Quiz Loading ─── */
@@ -675,6 +706,8 @@
 }
 
 
+
+ main
 .quiz-header-bar {
   display:flex; justify-content:space-between; align-items:center;
   margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--gray-200);
@@ -1174,12 +1207,20 @@ document.getElementById('btn-back-grade').addEventListener('click',()=> goScreen
 document.querySelectorAll('.db-tile').forEach(tile=>{
   tile.addEventListener('click',()=>{
     const m = tile.dataset.module;
+ feature/昕旂-技術開發
     if (m==='video')    { openVideoModule(); goScreen('s-video'); }
     else if(m==='quiz') { openQuizModule();  goScreen('s-quiz'); }
     else if(m==='wrong'){ renderWrongBook(); goScreen('s-wrong'); }
     else if(m==='analysis'){ renderAnalysis(); goScreen('s-analysis'); }
     else if(m==='formula') { renderFormula(); goScreen('s-formula'); }
     else goScreen('s-notes');
+
+    if      (m==='video')    { openVideoModule(); goScreen('s-video'); }
+    else if (m==='quiz')     { openQuizModule();  goScreen('s-quiz'); }
+    else if (m==='wrong')    { renderWrongBook(); goScreen('s-wrong'); }
+    else if (m==='analysis') { renderAnalysis();  goScreen('s-analysis'); }
+    else if (m==='formula')  { renderFormula();   goScreen('s-formula'); }
+ main
   });
 });
 
@@ -1236,6 +1277,7 @@ function renderVideoList(chId) {
 document.getElementById('btn-video-back-chapter').addEventListener('click',()=>showVideoView('chapter'));
 
 // ═══════════════════════════════════════════════════════
+ feature/昕旂-技術開發
 //   AGNES API — 動態出題服務
 // ═══════════════════════════════════════════════════════
 const AGNES_API_KEY = 'sk-7ZeVcZE5UQNNOHuBVRbuyi88xRMoDqo40eY7iUu3FsBpf4tQ';
@@ -1301,6 +1343,13 @@ function normaliseQuestion(q) {
 function openQuizModule() {
   showQuizStep('chapter');
   buildChapterList('quiz-chapters', ch => {
+
+//   MODULE: 隨堂測驗
+// ═══════════════════════════════════════════════════════
+function openQuizModule() {
+  showQuizStep('chapter');
+  buildChapterList('quiz-chapters', ch=>{
+ main
     QUIZ.chapterId = ch.id;
     document.getElementById('quiz-ch-title').textContent = `第 ${ch.num} 章：${ch.name}`;
     showQuizStep('diff');
@@ -1308,6 +1357,7 @@ function openQuizModule() {
 }
 
 function showQuizStep(step) {
+ feature/昕旂-技術開發
   document.getElementById('quiz-loading').classList.remove('active');
   ['chapter','diff','answering','result'].forEach(s => {
     document.getElementById(`quiz-step-${s}`).style.display = s === step ? 'block' : 'none';
@@ -1361,11 +1411,29 @@ document.querySelectorAll('.diff-btn').forEach(btn => {
     document.getElementById('quiz-ch-diff-label').innerHTML =
       `${ch?.name || ''} | ${diff}${aiLabel}`;
 
+
+  ['chapter','diff','answering','result'].forEach(s=>{
+    document.getElementById(`quiz-step-${s}`).style.display = s===step?'block':'none';
+  });
+}
+
+document.getElementById('btn-quiz-back-ch').addEventListener('click',()=>showQuizStep('chapter'));
+
+document.querySelectorAll('.diff-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    QUIZ.difficulty = btn.dataset.diff;
+    QUIZ.questions  = generateQuestions(QUIZ.chapterId, QUIZ.difficulty);
+    QUIZ.answers    = new Array(QUIZ.questions.length).fill(null);
+    QUIZ.current    = 0;
+    document.getElementById('quiz-ch-diff-label').textContent =
+      `${CHAPTERS.find(c=>c.id===QUIZ.chapterId)?.name} | ${QUIZ.difficulty}`;
+ main
     renderQuizQuestion();
     showQuizStep('answering');
   });
 });
 
+ feature/昕旂-技術開發
 // ── 渲染題目 + 格點導航 ──
 function renderQuizQuestion() {
   const q     = QUIZ.questions[QUIZ.current];
@@ -1384,31 +1452,63 @@ function renderQuizQuestion() {
   }).join('');
 
   // 題目卡
+
+function renderQuizQuestion() {
+  const q = QUIZ.questions[QUIZ.current];
+  const idx = QUIZ.current;
+  const total = QUIZ.questions.length;
+  document.getElementById('quiz-progress-label').textContent = `題目 ${idx+1} / ${total}`;
+
+ main
   const card = document.getElementById('quiz-question-card');
   card.innerHTML = `
     <span class="q-num">第 ${idx+1} 題 / 共 ${total} 題</span>
     <p class="q-text">${q.question}</p>
     <div class="q-options">
+ feature/昕旂-技術開發
       ${q.options.map((opt, oi) => {
         const key = ['A','B','C','D'][oi];
         const sel = QUIZ.answers[idx] === key ? 'selected' : '';
         const txt = opt.replace(/^[A-D][.)]\s*/, '');
         return `<button class="q-opt ${sel}" data-key="${key}" onclick="selectAnswer('${key}')">
           <span class="opt-key">${key}</span>${txt}
+
+      ${q.options.map((opt,oi)=>{
+        const key = ['A','B','C','D'][oi];
+        const sel = QUIZ.answers[idx]===key ? 'selected' : '';
+        return `<button class="q-opt ${sel}" data-key="${key}" onclick="selectAnswer('${key}')" ${sel?'':''}>
+          <span class="opt-key">${key}</span> ${opt.replace(/^[A-D]\. /,'')}
+ main
         </button>`;
       }).join('')}
     </div>`;
 
+ feature/昕旂-技術開發
   if (window.renderMathInElement) {
     renderMathInElement(card, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
   }
   document.getElementById('btn-quiz-prev').disabled               = idx === 0;
   document.getElementById('btn-quiz-next').style.display          = idx < total-1 ? 'inline-block' : 'none';
   document.getElementById('btn-quiz-submit').style.display        = idx === total-1 ? 'inline-block' : 'none';
+
+  // Re-render math
+  if(window.renderMathInElement) {
+    renderMathInElement(card, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+
+  const prevBtn   = document.getElementById('btn-quiz-prev');
+  const nextBtn   = document.getElementById('btn-quiz-next');
+  const submitBtn = document.getElementById('btn-quiz-submit');
+
+  prevBtn.disabled   = idx===0;
+  nextBtn.style.display   = idx<total-1 ? 'inline-block' : 'none';
+  submitBtn.style.display = idx===total-1 ? 'inline-block' : 'none';
+ main
 }
 
 function selectAnswer(key) {
   QUIZ.answers[QUIZ.current] = key;
+ feature/昕旂-技術開發
   renderQuizQuestion();
 }
 
@@ -1434,11 +1534,25 @@ document.getElementById('btn-quiz-submit').addEventListener('click', () => {
       difficulty: QUIZ.difficulty,
     }))
   );
+
+  // re-render to show selection
+  renderQuizQuestion();
+}
+
+document.getElementById('btn-quiz-prev').addEventListener('click',()=>{
+  if(QUIZ.current>0){ QUIZ.current--; renderQuizQuestion(); }
+});
+document.getElementById('btn-quiz-next').addEventListener('click',()=>{
+  if(QUIZ.current<QUIZ.questions.length-1){ QUIZ.current++; renderQuizQuestion(); }
+});
+document.getElementById('btn-quiz-submit').addEventListener('click',()=>{
+ main
   const { correct, total } = APP.addResult(QUIZ.chapterId, QUIZ.questions, QUIZ.answers);
   renderQuizResult(correct, total);
   showQuizStep('result');
   updateDashboardStats();
 });
+ feature/昕旂-技術開發
 document.getElementById('btn-quiz-again').addEventListener('click', () => showQuizStep('chapter'));
 
 // ── 結果頁 ──
@@ -1481,10 +1595,42 @@ function renderQuizResult(correct, total) {
         <span class="result-status ${isRight ? 'status-correct' : 'status-wrong'}">${isRight ? '&#10003; 正確' : '&#10007; 錯誤'}</span>
         <span class="result-q-text">第 ${i+1} 題</span>
         <span style="color:var(--gray-400);font-size:.9rem;">&#9660;</span>
+
+document.getElementById('btn-quiz-again').addEventListener('click',()=>showQuizStep('chapter'));
+
+function renderQuizResult(correct, total) {
+  const rate = Math.round(correct/total*100);
+  const msgs = [
+    [90, '太棒了！你掌握得非常好！🎉'],
+    [70, '做得不錯！繼續加油！👍'],
+    [50, '還有進步空間，複習一下吧！📚'],
+    [0,  '別氣餒，多練習就會進步的！💪']
+  ];
+  const msg = msgs.find(([min])=>rate>=min)?.[1] || msgs[3][1];
+
+  document.getElementById('result-score').textContent = `${correct} / ${total}`;
+  document.getElementById('result-rate').textContent  = `${rate}%`;
+  document.getElementById('result-msg').textContent   = msg;
+
+  const detail = document.getElementById('result-detail');
+  detail.innerHTML = '<p style="font-size:.875rem;font-weight:700;color:var(--gray-600);margin-bottom:12px;">各題詳情：</p>';
+
+  QUIZ.questions.forEach((q,i)=>{
+    const userAns = QUIZ.answers[i];
+    const isRight = userAns === q.answer;
+    const item = document.createElement('div');
+    item.className='result-item';
+    item.innerHTML=`
+      <div class="result-item-header" onclick="toggleDetail(this)">
+        <span class="result-status ${isRight?'status-correct':'status-wrong'}">${isRight?'✓ 正確':'✗ 錯誤'}</span>
+        <span class="result-q-text">第 ${i+1} 題</span>
+        <span style="color:var(--gray-400);font-size:.9rem;">▼</span>
+ main
       </div>
       <div class="result-detail-body">
         <div class="detail-label">題目</div>
         <div class="detail-val">${q.question}</div>
+ feature/昕旂-技術開發
         ${!isRight ? `
           <div class="detail-label">你的答案</div>
           <div class="detail-val detail-wrong">${userTxt}</div>
@@ -1493,20 +1639,41 @@ function renderQuizResult(correct, total) {
         ` : ''}
         <div class="detail-label">AI 詳細解說</div>
         <div class="detail-steps">${q.steps || q.explanation || '（無解說）'}</div>
+
+        ${!isRight?`
+          <div class="detail-label">你的答案</div>
+          <div class="detail-val detail-wrong">${userAns||'（未作答）'}. ${q.options.find(o=>o.startsWith(userAns||''))||''}</div>
+          <div class="detail-label">正確答案</div>
+          <div class="detail-val detail-right">${q.answer}. ${q.options.find(o=>o.startsWith(q.answer))||''}</div>
+        `:''}
+        <div class="detail-label">解題步驟</div>
+        <div class="detail-steps">${q.steps}</div>
+ main
       </div>`;
     detail.appendChild(item);
   });
 
+ feature/昕旂-技術開發
   if (window.renderMathInElement) {
+
+  if(window.renderMathInElement) {
+ main
     renderMathInElement(detail, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
   }
 }
 
 function toggleDetail(header) {
+ feature/昕旂-技術開發
   const body  = header.nextElementSibling;
   const arrow = header.querySelector('span:last-child');
   body.classList.toggle('open');
   arrow.innerHTML = body.classList.contains('open') ? '&#9650;' : '&#9660;';
+
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span:last-child');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+ main
 }
 
 // ═══════════════════════════════════════════════════════

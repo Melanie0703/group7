@@ -270,6 +270,7 @@ function selectCount(n) {
 // ============================================================
 // 開始測驗
 // ============================================================
+ feature/昕旂-技術開發
 async function startQuiz() {
   if (!currentUnit || !quizMode || !quizCount) return;
 
@@ -281,6 +282,12 @@ async function startQuiz() {
     ? await buildAIQuizQuestions(currentUnit.id, quizMode, quizCount)
     : buildQuizQuestions(currentUnit.id, quizMode, quizCount);
 
+
+function startQuiz() {
+  if (!currentUnit || !quizMode || !quizCount) return;
+
+  quizQuestions = buildQuizQuestions(currentUnit.id, quizMode, quizCount);
+ main
   if (quizQuestions.length === 0) {
     showToast('⚠️ 題庫題目不足，請稍後再試');
     return;
@@ -296,6 +303,7 @@ async function startQuiz() {
   showPage('quiz');
 }
 
+ feature/昕旂-技術開發
 // 靜態抽題演算法（保留供 legacy 相容；主流程已改用 buildAIQuizQuestions）
 function buildQuizQuestions(unitId, mode, total) {
   return (typeof _buildStaticQuizQuestions === 'function')
@@ -313,6 +321,52 @@ function shuffle(arr) {
   return (typeof _shuffleQuestions === 'function')
     ? _shuffleQuestions(arr)
     : arr;
+=======
+// 抽題演算法
+function buildQuizQuestions(unitId, mode, total) {
+  const bank = QUESTION_BANK[unitId];
+  if (!bank) return [];
+
+  let pool = [];
+
+  if (mode === 'mixed') {
+    // 5:2:1 比例
+    const easyCount = Math.round(total * 0.625);
+    const medCount = Math.round(total * 0.25);
+    const hardCount = total - easyCount - medCount;
+
+    pool = [
+      ...sample(bank.easy || [], easyCount).map(q => ({...q, _diff:'easy'})),
+      ...sample(bank.medium || [], medCount).map(q => ({...q, _diff:'medium'})),
+      ...sample(bank.hard || [], hardCount).map(q => ({...q, _diff:'hard'})),
+    ];
+  } else {
+    const source = bank[mode] || [];
+    pool = sample(source, total).map(q => ({...q, _diff: mode}));
+  }
+
+  // 隨機排列
+  return shuffle(pool);
+}
+
+function sample(arr, n) {
+  if (arr.length === 0) return [];
+  const shuffled = shuffle([...arr]);
+  // 如果不夠，重複取樣
+  const result = [];
+  while (result.length < n) {
+    result.push(...shuffled.slice(0, Math.min(n - result.length, shuffled.length)));
+  }
+  return result.slice(0, n);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+ main
 }
 
 // ============================================================
@@ -475,9 +529,9 @@ function submitAllAnswers() {
   finishQuiz();
 }
 
-// ============================================================
+// 
 // 測驗結束
-// ============================================================
+// 
 function finishQuiz() {
   const elapsed = Math.round((Date.now() - quizStartTime) / 1000);
   const totalQ = quizResults.length;
@@ -486,6 +540,7 @@ function finishQuiz() {
   const pct = Math.round(correctN / totalQ * 100);
   const score = pct;
 
+ feature/昕旂-技術開發
   // 儲存本次題目摘要到歷史（用於 AI 去重）
   Storage.addQuizHistory(
     quizQuestions.map(q => ({
@@ -496,6 +551,8 @@ function finishQuiz() {
     }))
   );
 
+
+ main
   // 更新進度
   Storage.updateProgress(currentUnit.id, correctN, totalQ);
   Storage.addHistory({

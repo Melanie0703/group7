@@ -501,6 +501,7 @@ function getQuizAIAnalysis(results, unit) {
 
   return msg;
 }
+ feature/昕旂-技術開發
 
 // ============================================================
 // AI 動態出題系統 — 嚴格課綱 + 歷史去重
@@ -703,3 +704,5 @@ function _shuffleQuestions(arr) {
   }
   return a;
 }
+
+ main

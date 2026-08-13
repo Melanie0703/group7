@@ -364,7 +364,10 @@ const Storage = {
   KEY_PROGRESS: 'edumath_progress',
   KEY_HISTORY: 'edumath_history',
   KEY_WATCHED: 'edumath_watched',
+ feature/昕旂-技術開發
   KEY_QUIZ_HISTORY: 'edumath_quiz_question_history',
+
+ main
 
   getErrors() {
     try { return JSON.parse(localStorage.getItem(this.KEY_ERRORS) || '[]'); } catch { return []; }
@@ -411,6 +414,7 @@ const Storage = {
     localStorage.setItem(this.KEY_HISTORY, JSON.stringify(h));
   },
 
+ feature/昕旂-技術開發
   // 題目歷史紀錄（用於 AI 去重）
   getQuizHistory() {
     try { return JSON.parse(localStorage.getItem(this.KEY_QUIZ_HISTORY) || '[]'); } catch { return []; }
@@ -424,6 +428,8 @@ const Storage = {
     localStorage.setItem(this.KEY_QUIZ_HISTORY, JSON.stringify(h));
   },
 
+
+ main
   getWatched() {
     try { return JSON.parse(localStorage.getItem(this.KEY_WATCHED) || '[]'); } catch { return []; }
   },
