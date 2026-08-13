@@ -257,10 +257,6 @@
         <span class="db-tile-icon" style="background:#ede9fe;color:#7c3aed;">🔣</span>
         <span class="db-tile-label">公式速查</span>
       </button>
-      <button class="db-tile" id="tile-notes" data-module="notes">
-        <span class="db-tile-icon" style="background:#fce7f3;color:#db2777;">📝</span>
-        <span class="db-tile-label">學習筆記</span>
-      </button>
     </div>
   </div>
 
@@ -405,24 +401,6 @@
   <div class="sub-body" id="formula-body"></div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     SCREEN 9 — 學習筆記 (placeholder)
-══════════════════════════════════════════ -->
-<div class="screen" id="s-notes">
-  <div class="sub-topbar">
-    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
-    <h3>學習筆記</h3>
-    <div></div>
-  </div>
-  <div class="sub-body">
-    <div class="placeholder-box">
-      <div style="font-size:3rem;">📝</div>
-      <h3>學習筆記功能</h3>
-      <p>此功能建置中，敬請期待！</p>
-    </div>
-  </div>
-</div>
-
 <style>
 /* ═══════════════════════════════════════
    Dashboard styles
@@ -457,6 +435,15 @@
   display:grid;
   grid-template-columns:repeat(3, 1fr);
   gap:14px;
+}
+/* 五宮格：第 4、5 個按鈕置中於第 2 列 */
+.db-grid .db-tile:nth-child(4) { grid-column:1; }
+.db-grid .db-tile:nth-child(5) { grid-column:2; }
+@media (max-width:480px) {
+  .db-grid { grid-template-columns:repeat(2,1fr); }
+  .db-grid .db-tile:nth-child(4),
+  .db-grid .db-tile:nth-child(5) { grid-column:auto; }
+  .db-grid .db-tile:nth-child(5) { grid-column:1/-1; max-width:50%; justify-self:center; }
 }
 .db-tile {
   display:flex; flex-direction:column; align-items:center; gap:10px;
@@ -1114,12 +1101,11 @@ document.getElementById('btn-back-grade').addEventListener('click',()=> goScreen
 document.querySelectorAll('.db-tile').forEach(tile=>{
   tile.addEventListener('click',()=>{
     const m = tile.dataset.module;
-    if (m==='video')    { openVideoModule(); goScreen('s-video'); }
-    else if(m==='quiz') { openQuizModule();  goScreen('s-quiz'); }
-    else if(m==='wrong'){ renderWrongBook(); goScreen('s-wrong'); }
-    else if(m==='analysis'){ renderAnalysis(); goScreen('s-analysis'); }
-    else if(m==='formula') { renderFormula(); goScreen('s-formula'); }
-    else goScreen('s-notes');
+    if      (m==='video')    { openVideoModule(); goScreen('s-video'); }
+    else if (m==='quiz')     { openQuizModule();  goScreen('s-quiz'); }
+    else if (m==='wrong')    { renderWrongBook(); goScreen('s-wrong'); }
+    else if (m==='analysis') { renderAnalysis();  goScreen('s-analysis'); }
+    else if (m==='formula')  { renderFormula();   goScreen('s-formula'); }
   });
 });
 
