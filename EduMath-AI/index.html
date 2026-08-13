@@ -300,25 +300,14 @@
       <p class="sub-hint">請選擇章節：</p>
       <div class="chapter-list" id="video-chapters"></div>
     </div>
-    <!-- Video list -->
+    <!-- Video list (外連卡片模式) -->
     <div id="video-list-view" style="display:none;">
       <div class="sub-breadcrumb">
         <button class="crumb-back" id="btn-video-back-chapter">← 章節選單</button>
         <span id="video-chapter-title"></span>
       </div>
+      <p class="video-open-hint">📌 點擊影片卡片，將在新分頁開啟 YouTube 播放（確保 100% 可播放）</p>
       <div class="video-list" id="video-items"></div>
-    </div>
-    <!-- Player -->
-    <div id="video-player-view" style="display:none;">
-      <div class="sub-breadcrumb">
-        <button class="crumb-back" id="btn-video-back-list">← 影片列表</button>
-        <span id="video-player-title"></span>
-      </div>
-      <div class="video-frame-wrap">
-        <iframe id="yt-iframe" width="100%" height="100%" src="" title="YouTube video player"
-          frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-      </div>
     </div>
   </div>
 </div>
@@ -550,30 +539,69 @@
 .ch-sub  { display:block; font-size:.78rem; color:var(--gray-400); font-weight:400; margin-top:2px; }
 .ch-arrow { color:var(--gray-400); font-size:1rem; }
 
-/* ─── Video list ─── */
-.video-list { display:flex; flex-direction:column; gap:10px; }
-.video-item {
-  display:flex; align-items:center; gap:12px; padding:14px 16px;
-  background:var(--white); border:1.5px solid var(--gray-200); border-radius:12px;
-  cursor:pointer; font-family:inherit;
-  transition:border-color var(--transition),background var(--transition);
+/* ─── Video open hint ─── */
+.video-open-hint {
+  font-size:.8rem; color:var(--gray-600); background:var(--gray-100);
+  border-radius:8px; padding:8px 12px; margin-bottom:14px;
+  border-left:3px solid var(--primary);
 }
-.video-item:hover { border-color:var(--primary); background:var(--primary-light); }
-.video-thumb {
-  width:60px; height:38px; border-radius:6px;
-  background:linear-gradient(135deg,#1e3a5f,#4A90E2);
+
+/* ─── Video card (外連模式) ─── */
+.video-list { display:flex; flex-direction:column; gap:12px; }
+.video-card {
+  background:var(--white); border:1.5px solid var(--gray-200); border-radius:14px;
+  overflow:hidden; box-shadow:var(--shadow-sm);
+  transition:border-color var(--transition),box-shadow var(--transition);
+}
+.video-card:hover { border-color:var(--primary); box-shadow:0 4px 16px rgba(74,144,226,.15); }
+
+.video-card-thumb {
+  position:relative; width:100%; padding-top:42%;
+  background:linear-gradient(135deg,#1a2f4e,#2563eb);
+  overflow:hidden;
+}
+.video-card-thumb img {
+  position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;
+}
+.video-thumb-fallback {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  align-items:center; justify-content:center;
+  font-size:2.5rem; color:rgba(255,255,255,.7);
+}
+.video-card-play-btn {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:44px; height:44px; border-radius:50%;
+  background:rgba(255,255,255,.92); color:var(--primary);
   display:flex; align-items:center; justify-content:center;
-  font-size:1.2rem; flex-shrink:0; color:white;
+  font-size:1.1rem; pointer-events:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
-.video-info { flex:1; text-align:left; }
-.video-title { display:block; font-size:.9rem; font-weight:600; color:var(--gray-800); }
-.video-meta  { display:block; font-size:.75rem; color:var(--gray-400); margin-top:3px; }
-.video-frame-wrap {
-  width:100%; padding-top:56.25%; position:relative;
-  border-radius:12px; overflow:hidden; background:#000;
-  box-shadow:var(--shadow);
+
+.video-card-body {
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
 }
-.video-frame-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
+.video-card-num {
+  font-size:1.1rem; font-weight:900; color:var(--primary);
+  opacity:.35; flex-shrink:0; min-width:28px;
+}
+.video-card-info { flex:1; min-width:0; }
+.video-card-title { display:block; font-size:.92rem; font-weight:700; color:var(--gray-800); margin-bottom:3px; }
+.video-card-meta  { display:block; font-size:.75rem; color:var(--gray-400); }
+.video-card-actions { display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+.video-btn-yt {
+  display:block; padding:7px 12px; border-radius:8px; font-size:.78rem; font-weight:700;
+  text-decoration:none; text-align:center; white-space:nowrap;
+  background:#ff0000; color:#fff;
+  transition:opacity var(--transition);
+}
+.video-btn-yt:hover { opacity:.85; }
+.video-btn-junyi {
+  display:block; padding:7px 12px; border-radius:8px; font-size:.78rem; font-weight:700;
+  text-decoration:none; text-align:center; white-space:nowrap;
+  background:var(--primary-light); color:var(--primary);
+  transition:background var(--transition);
+}
+.video-btn-junyi:hover { background:#d0e9fb; }
 
 /* ─── Quiz styles ─── */
 .diff-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px; }
@@ -783,40 +811,45 @@ const CHAPTERS = [
 ];
 
 // ─── Data: Video bank ────────────────────────────────
+// ytId: YouTube 影片 ID（點擊後以 window.open 開啟 youtube.com/watch）
+// junyiUrl: 均一平台直達連結（備用，點擊均一按鈕時使用）
 const VIDEOS = {
   ch1:[
-    { title:'負數與數線',           meta:'均一教育平台', ytId:'J8aQ6Jj_Z44' },
-    { title:'整數的加減法',         meta:'均一教育平台', ytId:'E0Tkb8G1G-o' },
-    { title:'整數的乘除與四則運算', meta:'均一教育平台', ytId:'vB4R2uS3gYw' },
-    { title:'指數律與科學記號',     meta:'均一教育平台', ytId:'8L6X6Xy1sJk' },
+    { title:'整數的加法',           meta:'均一教育平台・第一章', ytId:'La5GFS8h-TI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a1' },
+    { title:'整數四則運算',         meta:'均一教育平台・第一章', ytId:'XTr4zYOmsoY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a2' },
+    { title:'乘方的意義與基本計算', meta:'均一教育平台・第一章', ytId:'I3t2OJNKJoE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a3' },
+    { title:'指數律與科學記號',     meta:'均一教育平台・第一章', ytId:'8L6X6Xy1sJk', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a4' },
   ],
   ch2:[
-    { title:'因數與倍數',           meta:'均一教育平台', ytId:'a9X7hX9P1YY' },
-    { title:'最大公因數與最小公倍數', meta:'均一教育平台', ytId:'Q3mP8lX4_1A' },
-    { title:'分數的加減乘除',       meta:'均一教育平台', ytId:'rN9lq8Kx7Vc' },
+    { title:'因數與倍數',             meta:'均一教育平台・第二章', ytId:'DqAMFEzDMXk', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b1' },
+    { title:'最大公因數與最小公倍數', meta:'均一教育平台・第二章', ytId:'2Xq3P3I5_8I', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b2' },
+    { title:'分數的加減運算',         meta:'均一教育平台・第二章', ytId:'mJHM-3bUqyY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b3' },
+    { title:'分數的乘除運算',         meta:'均一教育平台・第二章', ytId:'4SFIF2wO_7Y', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b4' },
   ],
   ch3:[
-    { title:'以符號代表數與式子的運算',   meta:'均一教育平台', ytId:'K6g8tP9Y_X0' },
-    { title:'一元一次方程式的解法與應用', meta:'均一教育平台', ytId:'M2P7G_X9o1k' },
-    { title:'移項法則與應用題策略',       meta:'均一教育平台', ytId:'tGn3H8Px2zQ' },
+    { title:'以符號代表數與代入求值', meta:'均一教育平台・第三章', ytId:'NybHckSEQBI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c1' },
+    { title:'一元一次方程式的解法',   meta:'均一教育平台・第三章', ytId:'_sqFAXRflis', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c2' },
+    { title:'一元一次方程式的應用',   meta:'均一教育平台・第三章', ytId:'Tm9Bw6PPVSA', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c3' },
   ],
   ch4:[
-    { title:'二元一次聯立方程式：代入法',   meta:'均一教育平台', ytId:'pW5kNbR3mYc' },
-    { title:'二元一次聯立方程式：加減消去法', meta:'均一教育平台', ytId:'hJ2Lx9Ks4Vd' },
+    { title:'二元一次方程式',           meta:'均一教育平台・第四章', ytId:'JVY62fs3pNQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d1' },
+    { title:'聯立方程式：代入消去法',   meta:'均一教育平台・第四章', ytId:'KXkwOWJpILQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d2' },
+    { title:'聯立方程式：加減消去法',   meta:'均一教育平台・第四章', ytId:'ghbOHkBGqLQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d3' },
   ],
   ch5:[
-    { title:'直角坐標系介紹',             meta:'均一教育平台', ytId:'nF6Qy7Wm3Rb' },
-    { title:'二元一次方程式的圖形',       meta:'均一教育平台', ytId:'cT8Zp4Xv1Ls' },
-    { title:'斜率的意義與求法',           meta:'均一教育平台', ytId:'wE9Gr2Hn5Jt' },
+    { title:'直角坐標系',               meta:'均一教育平台・第五章', ytId:'aKN6ZhSl_CE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e1' },
+    { title:'二元一次方程式的圖形',     meta:'均一教育平台・第五章', ytId:'MXV-MRsFLnI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e2' },
+    { title:'斜率的意義',               meta:'均一教育平台・第五章', ytId:'SeMiQHBgLIU', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e3' },
   ],
   ch6:[
-    { title:'比與比值的概念',   meta:'均一教育平台', ytId:'kD4Mf7Yw8Qu' },
-    { title:'比例式與應用題',   meta:'均一教育平台', ytId:'sB6Nc1Xp3Ia' },
+    { title:'比與比值',         meta:'均一教育平台・第六章', ytId:'ZAyQKpFvyLs', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f1' },
+    { title:'比例式',           meta:'均一教育平台・第六章', ytId:'6SJGCm_BPXY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f2' },
+    { title:'正比與反比的應用', meta:'均一教育平台・第六章', ytId:'KH1hq_hfbnc', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f3' },
   ],
   ch7:[
-    { title:'不等式的基本性質',     meta:'均一教育平台', ytId:'oA5Vh8Lt2Ew' },
-    { title:'一元一次不等式的解法', meta:'均一教育平台', ytId:'mC3Kg6Zr9Df' },
-    { title:'不等式解集合與數線',   meta:'均一教育平台', ytId:'uX7Bj4Ym5Sp' },
+    { title:'不等式的基本性質',     meta:'均一教育平台・第七章', ytId:'VcBGxJ-DKME', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g1' },
+    { title:'一元一次不等式的解法', meta:'均一教育平台・第七章', ytId:'eMKRMEfVfBE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g2' },
+    { title:'不等式的應用',         meta:'均一教育平台・第七章', ytId:'8YKAt7tn85o', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g3' },
   ],
 };
 
@@ -1009,37 +1042,41 @@ function openVideoModule() {
 }
 
 function showVideoView(view) {
-  document.getElementById('video-chapter-list').style.display  = view==='chapter'?'block':'none';
-  document.getElementById('video-list-view').style.display     = view==='list'   ?'block':'none';
-  document.getElementById('video-player-view').style.display   = view==='player' ?'block':'none';
-  if(view!=='player') {
-    const frame = document.getElementById('yt-iframe');
-    frame.src = ''; // stop playback
-  }
+  document.getElementById('video-chapter-list').style.display = view==='chapter'?'block':'none';
+  document.getElementById('video-list-view').style.display    = view==='list'   ?'block':'none';
 }
 
 function renderVideoList(chId) {
   const list = document.getElementById('video-items');
   const videos = VIDEOS[chId] || [];
   list.innerHTML = '';
-  videos.forEach(v=>{
-    const item = document.createElement('button');
-    item.className='video-item';
-    item.innerHTML=`<span class="video-thumb">▶</span><span class="video-info"><span class="video-title">${v.title}</span><span class="video-meta">${v.meta}</span></span>`;
-    item.addEventListener('click',()=>{
-      document.getElementById('video-player-title').textContent = v.title;
-      document.getElementById('yt-iframe').src = `https://www.youtube.com/embed/${v.ytId}?autoplay=1`;
-      showVideoView('player');
-    });
-    list.appendChild(item);
+  videos.forEach((v, idx) => {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <div class="video-card-thumb">
+        <img src="https://img.youtube.com/vi/${v.ytId}/mqdefault.jpg"
+             alt="${v.title}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="video-thumb-fallback" style="display:none;">▶</div>
+        <div class="video-card-play-btn">▶</div>
+      </div>
+      <div class="video-card-body">
+        <div class="video-card-num">${String(idx+1).padStart(2,'0')}</div>
+        <div class="video-card-info">
+          <span class="video-card-title">${v.title}</span>
+          <span class="video-card-meta">${v.meta}</span>
+        </div>
+        <div class="video-card-actions">
+          <a class="video-btn-yt"     href="https://www.youtube.com/watch?v=${v.ytId}" target="_blank" rel="noopener">▶ YouTube</a>
+          <a class="video-btn-junyi"  href="${v.junyiUrl}" target="_blank" rel="noopener">均一平台 ↗</a>
+        </div>
+      </div>`;
+    list.appendChild(card);
   });
 }
 
 document.getElementById('btn-video-back-chapter').addEventListener('click',()=>showVideoView('chapter'));
-document.getElementById('btn-video-back-list').addEventListener('click',()=>{
-  document.getElementById('yt-iframe').src='';
-  showVideoView('list');
-});
 
 // ═══════════════════════════════════════════════════════
 //   MODULE: 隨堂測驗
