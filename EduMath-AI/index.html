@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduMath AI｜國中數學 AI 家教</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue-100: #e8f0fe;
+      --blue-400: #4a90d9;
+      --blue-500: #2563eb;
+      --blue-600: #1d4ed8;
+      --purple-500: #7c3aed;
+      --purple-600: #6d28d9;
+      --gray-50:  #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --white: #ffffff;
+      --radius: 14px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.09);
+      --transition: 0.22s ease;
+    }
+
+    body {
+      font-family: -apple-system, "Segoe UI", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background: linear-gradient(135deg, #eef2ff 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    /* ── Page container ── */
+    .page {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      animation: fadeIn 0.35s ease;
+    }
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* ── Hero banner (Step 1) ── */
+    .hero {
+      background: linear-gradient(135deg, var(--blue-500) 0%, var(--purple-500) 100%);
+      padding: 48px 40px 40px;
+      text-align: center;
+      color: var(--white);
+    }
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 30px;
+    }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 0.97rem;
+      opacity: 0.88;
+      line-height: 1.6;
+    }
+
+    /* ── Form section ── */
+    .form-section {
+      padding: 36px 40px 40px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 2px solid var(--gray-200);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color var(--transition);
+      color: var(--gray-800);
+      background: var(--gray-50);
+    }
+    .form-input:focus {
+      border-color: var(--blue-500);
+      background: var(--white);
+    }
+    .form-input::placeholder { color: var(--gray-400); }
+
+    /* ── Primary button ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+      letter-spacing: 0.03em;
+    }
+    .btn-primary:hover  { opacity: 0.92; transform: translateY(-1px); }
+    .btn-primary:active { opacity: 1;    transform: translateY(0); }
+
+    /* ── Hint / error ── */
+    .hint {
+      font-size: 0.8rem;
+      color: #ef4444;
+      margin-top: 6px;
+      min-height: 18px;
+      display: none;
+    }
+    .hint.visible { display: block; }
+
+    /* ── Step 2 header ── */
+    .step-header {
+      padding: 36px 40px 0;
+      text-align: center;
+    }
+    .step-header .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
+      color: var(--white);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-weight: 800;
+    }
+    .step-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      line-height: 1.5;
+    }
+    .step-header p {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      margin-top: 6px;
+    }
+
+    /* ── Grade buttons ── */
+    .grade-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 28px 40px 40px;
+    }
+    .btn-grade {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--gray-800);
+      background: var(--gray-50);
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+      text-align: left;
+    }
+    .btn-grade:hover {
+      border-color: var(--blue-500);
+      background: var(--blue-100);
+      transform: translateX(4px);
+    }
+    .btn-grade .grade-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .badge-g7 { background: #dbeafe; }
+    .badge-g8 { background: #ede9fe; }
+    .badge-g9 { background: #fce7f3; }
+    .btn-grade .grade-info { flex: 1; }
+    .btn-grade .grade-name { display: block; font-size: 1rem; font-weight: 700; }
+    .btn-grade .grade-sub  { display: block; font-size: 0.8rem; color: var(--gray-600); margin-top: 2px; }
+    .btn-grade .arrow      { color: var(--gray-400); font-size: 1.1rem; }
+
+    /* ── Step 3 placeholder ── */
+    .placeholder-section {
+      padding: 48px 40px;
+      text-align: center;
+    }
+    .placeholder-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+    .placeholder-section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+    }
+    .placeholder-section p {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+    }
+    .info-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background: var(--blue-100);
+      color: var(--blue-500);
+      border-radius: 100px;
+      font-size: 0.825rem;
+      font-weight: 600;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 10px 24px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--gray-600);
+      background: var(--gray-100);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .btn-back:hover { background: var(--gray-200); }
+
+    /* ── Progress dots ── */
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 0 20px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      transition: background var(--transition), width var(--transition);
+    }
+    .dot.active {
+      background: var(--blue-500);
+      width: 24px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ───────── Step 1: Login ───────── -->
+  <div class="page active" id="page-1">
+    <div class="card">
+      <div class="hero">
+        <div class="hero-icon">🧮</div>
+        <h1>EduMath AI</h1>
+        <p>你的專屬國中數學 AI 智慧家教</p>
+      </div>
+      <div class="form-section">
+        <label class="form-label" for="student-name">學生姓名</label>
+        <input
+          class="form-input"
+          type="text"
+          id="student-name"
+          placeholder="請輸入你的名字"
+          maxlength="30"
+          autocomplete="off"
+        />
+        <p class="hint" id="name-hint">請輸入你的姓名後再繼續 👆</p>
+        <button class="btn-primary" id="btn-start">開始學習 →</button>
+      </div>
+    </div>
+    <div class="progress-dots" style="margin-top:16px;">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- ───────── Step 2: Grade Select ───────── -->
+  <div class="page" id="page-2">
+    <div class="card">
+      <div class="step-header">
+        <div class="avatar" id="avatar-initial">?</div>
+        <h2>歡迎，<span id="display-name">同學</span>！<br>請選擇你的年級</h2>
+        <p>選擇後即可進入專屬課程</p>
+      </div>
+      <div class="grade-list">
+        <button class="btn-grade" data-grade="7" data-label="七年級（國一）">
+          <span class="grade-badge badge-g7">📐</span>
+          <span class="grade-info">
+            <span class="grade-name">七年級（國一）</span>
+            <span class="grade-sub">整數運算、代數、幾何基礎</span>
+          </span>
+          <span class="arrow">›</span>
+        </button>
+        <button class="btn-grade" data-grade="8" data-label="八年級（國二）">
+          <span class="grade-badge badge-g8">📊</span>
+          <span class="grade-info">
+            <span class="grade-name">八年級（國二）</span>
+            <span class="grade-sub">方程式、函數、三角形</span>
+          </span>
+          <span class="arrow">›</span>
+        </button>
+        <button class="btn-grade" data-grade="9" data-label="九年級（國三）">
+          <span class="grade-badge badge-g9">🎯</span>
+          <span class="grade-info">
+            <span class="grade-name">九年級（國三）</span>
+            <span class="grade-sub">二次函數、統計、會考複習</span>
+          </span>
+          <span class="arrow">›</span>
+        </button>
+      </div>
+    </div>
+    <div class="progress-dots" style="margin-top:16px;">
+      <div class="dot"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- ───────── Step 3: Placeholder ───────── -->
+  <div class="page" id="page-3">
+    <div class="card">
+      <div class="placeholder-section">
+        <div class="placeholder-icon">🚧</div>
+        <h2>主學習頁面</h2>
+        <p>
+          <strong id="step3-name"></strong> 同學，你選擇了 <strong id="step3-grade"></strong>。<br>
+          此頁面功能正在建置中，<br>敬請期待！
+        </p>
+        <div class="info-chip">⏳ 功能建置中</div>
+        <br>
+        <button class="btn-back" id="btn-back-to-grade">← 重新選擇年級</button>
+      </div>
+    </div>
+    <div class="progress-dots" style="margin-top:16px;">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot active"></div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──
+    const state = { name: '', grade: '', gradeLabel: '' };
+
+    // ── DOM refs ──
+    const pages       = document.querySelectorAll('.page');
+    const inputName   = document.getElementById('student-name');
+    const nameHint    = document.getElementById('name-hint');
+    const btnStart    = document.getElementById('btn-start');
+    const displayName = document.getElementById('display-name');
+    const avatarInit  = document.getElementById('avatar-initial');
+    const gradeButtons= document.querySelectorAll('.btn-grade');
+    const step3Name   = document.getElementById('step3-name');
+    const step3Grade  = document.getElementById('step3-grade');
+    const btnBackGrade= document.getElementById('btn-back-to-grade');
+
+    // ── Navigate ──
+    function goTo(pageId) {
+      pages.forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Step 1 → 2 ──
+    btnStart.addEventListener('click', () => {
+      const name = inputName.value.trim();
+      if (!name) {
+        nameHint.classList.add('visible');
+        inputName.focus();
+        return;
+      }
+      nameHint.classList.remove('visible');
+      state.name = name;
+      displayName.textContent = name;
+      avatarInit.textContent = name.charAt(0).toUpperCase();
+      goTo(2);
+    });
+
+    inputName.addEventListener('keydown', e => {
+      if (e.key === 'Enter') btnStart.click();
+    });
+
+    inputName.addEventListener('input', () => {
+      if (inputName.value.trim()) nameHint.classList.remove('visible');
+    });
+
+    // ── Step 2 → 3 ──
+    gradeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.grade      = btn.dataset.grade;
+        state.gradeLabel = btn.dataset.label;
+        step3Name.textContent  = state.name;
+        step3Grade.textContent = state.gradeLabel;
+        goTo(3);
+      });
+    });
+
+    // ── Step 3 → 2 ──
+    btnBackGrade.addEventListener('click', () => goTo(2));
+  </script>
+</body>
+</html>
