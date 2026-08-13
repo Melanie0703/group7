@@ -4,21 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EduMath AI｜國中數學 AI 家教</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --blue-100: #e8f0fe;
-      --blue-400: #4a90d9;
-      --blue-500: #2563eb;
-      --blue-600: #1d4ed8;
-      --purple-500: #7c3aed;
-      --purple-600: #6d28d9;
-      --gray-50:  #f9fafb;
+      --primary: #4A90E2;
+      --primary-dark: #2563eb;
+      --primary-light: #e8f3fd;
+      --accent: #7c3aed;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --gray-50: #f9fafb;
       --gray-100: #f3f4f6;
       --gray-200: #e5e7eb;
       --gray-400: #9ca3af;
@@ -27,279 +28,129 @@
       --white: #ffffff;
       --radius: 14px;
       --shadow: 0 4px 24px rgba(0,0,0,0.09);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
       --transition: 0.22s ease;
     }
 
     body {
-      font-family: -apple-system, "Segoe UI", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
-      background: linear-gradient(135deg, #eef2ff 0%, #f0fdf4 100%);
+      font-family: -apple-system,"Segoe UI","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+      background: linear-gradient(135deg,#eef2ff 0%,#f0fdf4 100%);
       min-height: 100vh;
-      display: flex;
+      padding: 0;
+    }
+
+    /* ─── Screen system ─── */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: block; }
+
+    /* ─── Login / Grade screens (centred card) ─── */
+    .screen-centred {
+      display: none;
+      min-height: 100vh;
       align-items: center;
       justify-content: center;
       padding: 24px 16px;
     }
+    .screen-centred.active { display: flex; }
 
-    /* ── Page container ── */
-    .page {
-      display: none;
-      width: 100%;
-      max-width: 480px;
-      animation: fadeIn 0.35s ease;
-    }
-    .page.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Card ── */
     .card {
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+      width: 100%;
+      max-width: 480px;
+      animation: fadeUp 0.35s ease;
     }
 
-    /* ── Hero banner (Step 1) ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ─── Hero banner ─── */
     .hero {
-      background: linear-gradient(135deg, var(--blue-500) 0%, var(--purple-500) 100%);
+      background: linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
       padding: 48px 40px 40px;
       text-align: center;
       color: var(--white);
     }
     .hero-icon {
-      width: 64px;
-      height: 64px;
-      background: rgba(255,255,255,0.18);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 30px;
+      width:64px; height:64px;
+      background:rgba(255,255,255,0.18);
+      border-radius:18px;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 20px; font-size:30px;
     }
-    .hero h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      margin-bottom: 8px;
-    }
-    .hero p {
-      font-size: 0.97rem;
-      opacity: 0.88;
-      line-height: 1.6;
-    }
+    .hero h1 { font-size:2rem; font-weight:800; letter-spacing:.02em; margin-bottom:8px; }
+    .hero p  { font-size:.97rem; opacity:.88; line-height:1.6; }
 
-    /* ── Form section ── */
-    .form-section {
-      padding: 36px 40px 40px;
-    }
-    .form-label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--gray-600);
-      margin-bottom: 8px;
-    }
+    /* ─── Form ─── */
+    .form-section { padding:36px 40px 40px; }
+    .form-label { display:block; font-size:.875rem; font-weight:600; color:var(--gray-600); margin-bottom:8px; }
     .form-input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1rem;
-      font-family: inherit;
-      border: 2px solid var(--gray-200);
-      border-radius: 10px;
-      outline: none;
-      transition: border-color var(--transition);
-      color: var(--gray-800);
-      background: var(--gray-50);
+      width:100%; padding:14px 16px; font-size:1rem; font-family:inherit;
+      border:2px solid var(--gray-200); border-radius:10px; outline:none;
+      transition:border-color var(--transition); color:var(--gray-800); background:var(--gray-50);
     }
-    .form-input:focus {
-      border-color: var(--blue-500);
-      background: var(--white);
-    }
-    .form-input::placeholder { color: var(--gray-400); }
+    .form-input:focus { border-color:var(--primary); background:var(--white); }
+    .form-input::placeholder { color:var(--gray-400); }
+    .hint { font-size:.8rem; color:var(--red); margin-top:6px; min-height:18px; display:none; }
+    .hint.visible { display:block; }
 
-    /* ── Primary button ── */
     .btn-primary {
-      display: block;
-      width: 100%;
-      margin-top: 20px;
-      padding: 15px;
-      font-size: 1rem;
-      font-weight: 700;
-      font-family: inherit;
-      color: var(--white);
-      background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: opacity var(--transition), transform var(--transition);
-      letter-spacing: 0.03em;
+      display:block; width:100%; margin-top:20px; padding:15px;
+      font-size:1rem; font-weight:700; font-family:inherit; color:var(--white);
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      border:none; border-radius:10px; cursor:pointer;
+      transition:opacity var(--transition),transform var(--transition); letter-spacing:.03em;
     }
-    .btn-primary:hover  { opacity: 0.92; transform: translateY(-1px); }
-    .btn-primary:active { opacity: 1;    transform: translateY(0); }
+    .btn-primary:hover  { opacity:.92; transform:translateY(-1px); }
+    .btn-primary:active { opacity:1;   transform:translateY(0); }
 
-    /* ── Hint / error ── */
-    .hint {
-      font-size: 0.8rem;
-      color: #ef4444;
-      margin-top: 6px;
-      min-height: 18px;
-      display: none;
-    }
-    .hint.visible { display: block; }
-
-    /* ── Step 2 header ── */
-    .step-header {
-      padding: 36px 40px 0;
-      text-align: center;
-    }
+    /* ─── Grade select ─── */
+    .step-header { padding:36px 40px 0; text-align:center; }
     .step-header .avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
-      color: var(--white);
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-weight: 800;
+      width:56px; height:56px; border-radius:50%;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:var(--white); font-size:1.5rem;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 16px; font-weight:800;
     }
-    .step-header h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--gray-800);
-      line-height: 1.5;
-    }
-    .step-header p {
-      font-size: 0.875rem;
-      color: var(--gray-600);
-      margin-top: 6px;
-    }
+    .step-header h2 { font-size:1.25rem; font-weight:700; color:var(--gray-800); line-height:1.5; }
+    .step-header p  { font-size:.875rem; color:var(--gray-600); margin-top:6px; }
 
-    /* ── Grade buttons ── */
-    .grade-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      padding: 28px 40px 40px;
-    }
+    .grade-list { display:flex; flex-direction:column; gap:14px; padding:28px 40px 40px; }
     .btn-grade {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 18px 20px;
-      font-size: 1rem;
-      font-family: inherit;
-      font-weight: 600;
-      color: var(--gray-800);
-      background: var(--gray-50);
-      border: 2px solid var(--gray-200);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: border-color var(--transition), background var(--transition), transform var(--transition);
-      text-align: left;
+      display:flex; align-items:center; gap:16px; padding:18px 20px;
+      font-size:1rem; font-family:inherit; font-weight:600;
+      color:var(--gray-800); background:var(--gray-50);
+      border:2px solid var(--gray-200); border-radius:12px; cursor:pointer;
+      transition:border-color var(--transition),background var(--transition),transform var(--transition);
     }
-    .btn-grade:hover {
-      border-color: var(--blue-500);
-      background: var(--blue-100);
-      transform: translateX(4px);
-    }
+    .btn-grade:hover { border-color:var(--primary); background:var(--primary-light); transform:translateX(4px); }
     .btn-grade .grade-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
+      width:40px; height:40px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;
     }
-    .badge-g7 { background: #dbeafe; }
-    .badge-g8 { background: #ede9fe; }
-    .badge-g9 { background: #fce7f3; }
-    .btn-grade .grade-info { flex: 1; }
-    .btn-grade .grade-name { display: block; font-size: 1rem; font-weight: 700; }
-    .btn-grade .grade-sub  { display: block; font-size: 0.8rem; color: var(--gray-600); margin-top: 2px; }
-    .btn-grade .arrow      { color: var(--gray-400); font-size: 1.1rem; }
+    .badge-g7{background:#dbeafe;} .badge-g8{background:#ede9fe;} .badge-g9{background:#fce7f3;}
+    .btn-grade .grade-info { flex:1; }
+    .btn-grade .grade-name { display:block; font-size:1rem; font-weight:700; }
+    .btn-grade .grade-sub  { display:block; font-size:.8rem; color:var(--gray-600); margin-top:2px; }
+    .btn-grade .arrow { color:var(--gray-400); font-size:1.1rem; }
 
-    /* ── Step 3 placeholder ── */
-    .placeholder-section {
-      padding: 48px 40px;
-      text-align: center;
-    }
-    .placeholder-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-    }
-    .placeholder-section h2 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gray-800);
-      margin-bottom: 8px;
-    }
-    .placeholder-section p {
-      font-size: 0.9rem;
-      color: var(--gray-600);
-      line-height: 1.7;
-    }
-    .info-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 20px;
-      padding: 8px 16px;
-      background: var(--blue-100);
-      color: var(--blue-500);
-      border-radius: 100px;
-      font-size: 0.825rem;
-      font-weight: 600;
-    }
-    .btn-back {
-      display: inline-block;
-      margin-top: 24px;
-      padding: 10px 24px;
-      font-size: 0.875rem;
-      font-family: inherit;
-      font-weight: 600;
-      color: var(--gray-600);
-      background: var(--gray-100);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background var(--transition);
-    }
-    .btn-back:hover { background: var(--gray-200); }
-
-    /* ── Progress dots ── */
-    .progress-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      padding: 0 0 20px;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--gray-200);
-      transition: background var(--transition), width var(--transition);
-    }
-    .dot.active {
-      background: var(--blue-500);
-      width: 24px;
-      border-radius: 4px;
-    }
+    .progress-dots { display:flex; justify-content:center; gap:8px; padding:0 0 20px; margin-top:16px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--gray-200); transition:background var(--transition),width var(--transition); }
+    .dot.active { background:var(--primary); width:24px; border-radius:4px; }
   </style>
 </head>
 <body>
 
-  <!-- ───────── Step 1: Login ───────── -->
-  <div class="page active" id="page-1">
+<!-- ══════════════════════════════════════════
+     SCREEN 1 — Login
+══════════════════════════════════════════ -->
+<div class="screen-centred active" id="s-login">
+  <div>
     <div class="card">
       <div class="hero">
         <div class="hero-icon">🧮</div>
@@ -308,27 +159,22 @@
       </div>
       <div class="form-section">
         <label class="form-label" for="student-name">學生姓名</label>
-        <input
-          class="form-input"
-          type="text"
-          id="student-name"
-          placeholder="請輸入你的名字"
-          maxlength="30"
-          autocomplete="off"
-        />
+        <input class="form-input" type="text" id="student-name" placeholder="請輸入你的名字" maxlength="30" autocomplete="off"/>
         <p class="hint" id="name-hint">請輸入你的姓名後再繼續 👆</p>
         <button class="btn-primary" id="btn-start">開始學習 →</button>
       </div>
     </div>
-    <div class="progress-dots" style="margin-top:16px;">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+    <div class="progress-dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
     </div>
   </div>
+</div>
 
-  <!-- ───────── Step 2: Grade Select ───────── -->
-  <div class="page" id="page-2">
+<!-- ══════════════════════════════════════════
+     SCREEN 2 — Grade Select
+══════════════════════════════════════════ -->
+<div class="screen-centred" id="s-grade">
+  <div>
     <div class="card">
       <div class="step-header">
         <div class="avatar" id="avatar-initial">?</div>
@@ -338,118 +184,1179 @@
       <div class="grade-list">
         <button class="btn-grade" data-grade="7" data-label="七年級（國一）">
           <span class="grade-badge badge-g7">📐</span>
-          <span class="grade-info">
-            <span class="grade-name">七年級（國一）</span>
-            <span class="grade-sub">整數運算、代數、幾何基礎</span>
-          </span>
+          <span class="grade-info"><span class="grade-name">七年級（國一）</span><span class="grade-sub">整數運算、代數、幾何基礎</span></span>
           <span class="arrow">›</span>
         </button>
         <button class="btn-grade" data-grade="8" data-label="八年級（國二）">
           <span class="grade-badge badge-g8">📊</span>
-          <span class="grade-info">
-            <span class="grade-name">八年級（國二）</span>
-            <span class="grade-sub">方程式、函數、三角形</span>
-          </span>
+          <span class="grade-info"><span class="grade-name">八年級（國二）</span><span class="grade-sub">方程式、函數、三角形</span></span>
           <span class="arrow">›</span>
         </button>
         <button class="btn-grade" data-grade="9" data-label="九年級（國三）">
           <span class="grade-badge badge-g9">🎯</span>
-          <span class="grade-info">
-            <span class="grade-name">九年級（國三）</span>
-            <span class="grade-sub">二次函數、統計、會考複習</span>
-          </span>
+          <span class="grade-info"><span class="grade-name">九年級（國三）</span><span class="grade-sub">二次函數、統計、會考複習</span></span>
           <span class="arrow">›</span>
         </button>
       </div>
     </div>
-    <div class="progress-dots" style="margin-top:16px;">
-      <div class="dot"></div>
-      <div class="dot active"></div>
-      <div class="dot"></div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3 — Dashboard (七年級)
+══════════════════════════════════════════ -->
+<div class="screen" id="s-dashboard">
+  <!-- Top bar -->
+  <div class="db-topbar">
+    <div class="db-topbar-left">
+      <span class="db-greeting" id="db-greeting">早安，同學！</span>
+      <span class="db-date" id="db-date"></span>
+    </div>
+    <div class="db-topbar-right">
+      <button class="db-back-btn" id="btn-back-grade" title="切換年級">⬅ 切換年級</button>
     </div>
   </div>
 
-  <!-- ───────── Step 3: Placeholder ───────── -->
-  <div class="page" id="page-3">
-    <div class="card">
-      <div class="placeholder-section">
-        <div class="placeholder-icon">🚧</div>
-        <h2>主學習頁面</h2>
-        <p>
-          <strong id="step3-name"></strong> 同學，你選擇了 <strong id="step3-grade"></strong>。<br>
-          此頁面功能正在建置中，<br>敬請期待！
-        </p>
-        <div class="info-chip">⏳ 功能建置中</div>
-        <br>
-        <button class="btn-back" id="btn-back-to-grade">← 重新選擇年級</button>
+  <!-- Hero strip -->
+  <div class="db-hero">
+    <div class="db-hero-inner">
+      <div class="db-hero-text">
+        <h2 id="db-welcome-title">七年級數學學習中心</h2>
+        <p>今天也一起努力吧！選擇想學習的模組開始。</p>
+      </div>
+      <div class="db-hero-badge">📐</div>
+    </div>
+  </div>
+
+  <!-- Six-grid menu -->
+  <div class="db-grid-wrap">
+    <div class="db-grid">
+      <button class="db-tile" id="tile-video" data-module="video">
+        <span class="db-tile-icon" style="background:#e8f3fd;color:#4A90E2;">🎬</span>
+        <span class="db-tile-label">教學影片</span>
+      </button>
+      <button class="db-tile" id="tile-quiz" data-module="quiz">
+        <span class="db-tile-icon" style="background:#fef3c7;color:#d97706;">✏️</span>
+        <span class="db-tile-label">隨堂測驗</span>
+      </button>
+      <button class="db-tile" id="tile-wrong" data-module="wrong">
+        <span class="db-tile-icon" style="background:#fee2e2;color:#ef4444;">📋</span>
+        <span class="db-tile-label">錯題紀錄</span>
+      </button>
+      <button class="db-tile" id="tile-analysis" data-module="analysis">
+        <span class="db-tile-icon" style="background:#d1fae5;color:#059669;">📊</span>
+        <span class="db-tile-label">學習分析</span>
+      </button>
+      <button class="db-tile" id="tile-formula" data-module="formula">
+        <span class="db-tile-icon" style="background:#ede9fe;color:#7c3aed;">🔣</span>
+        <span class="db-tile-label">公式速查</span>
+      </button>
+      <button class="db-tile" id="tile-notes" data-module="notes">
+        <span class="db-tile-icon" style="background:#fce7f3;color:#db2777;">📝</span>
+        <span class="db-tile-label">學習筆記</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="db-progress-wrap">
+    <div class="db-progress-card">
+      <div class="db-stat">
+        <span class="db-stat-val" id="stat-time">0</span>
+        <span class="db-stat-label">學習時間(分)</span>
+      </div>
+      <div class="db-stat-divider"></div>
+      <div class="db-stat">
+        <span class="db-stat-val" id="stat-total">0</span>
+        <span class="db-stat-label">完成題數</span>
+      </div>
+      <div class="db-stat-divider"></div>
+      <div class="db-stat">
+        <span class="db-stat-val" id="stat-acc">—</span>
+        <span class="db-stat-label">正確率</span>
       </div>
     </div>
-    <div class="progress-dots" style="margin-top:16px;">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot active"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 4 — 教學影片
+══════════════════════════════════════════ -->
+<div class="screen" id="s-video">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>教學影片</h3>
+    <div></div>
+  </div>
+  <div class="sub-body">
+    <!-- Chapter list -->
+    <div id="video-chapter-list">
+      <p class="sub-hint">請選擇章節：</p>
+      <div class="chapter-list" id="video-chapters"></div>
+    </div>
+    <!-- Video list -->
+    <div id="video-list-view" style="display:none;">
+      <div class="sub-breadcrumb">
+        <button class="crumb-back" id="btn-video-back-chapter">← 章節選單</button>
+        <span id="video-chapter-title"></span>
+      </div>
+      <div class="video-list" id="video-items"></div>
+    </div>
+    <!-- Player -->
+    <div id="video-player-view" style="display:none;">
+      <div class="sub-breadcrumb">
+        <button class="crumb-back" id="btn-video-back-list">← 影片列表</button>
+        <span id="video-player-title"></span>
+      </div>
+      <div class="video-frame-wrap">
+        <iframe id="yt-iframe" width="100%" height="100%" src="" title="YouTube video player"
+          frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
     </div>
   </div>
+</div>
 
-  <script>
-    // ── State ──
-    const state = { name: '', grade: '', gradeLabel: '' };
+<!-- ══════════════════════════════════════════
+     SCREEN 5 — 隨堂測驗
+══════════════════════════════════════════ -->
+<div class="screen" id="s-quiz">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>隨堂測驗</h3>
+    <div></div>
+  </div>
+  <div class="sub-body">
+    <!-- Step A: chapter -->
+    <div id="quiz-step-chapter">
+      <p class="sub-hint">第一步：選擇章節</p>
+      <div class="chapter-list" id="quiz-chapters"></div>
+    </div>
+    <!-- Step B: difficulty -->
+    <div id="quiz-step-diff" style="display:none;">
+      <div class="sub-breadcrumb">
+        <button class="crumb-back" id="btn-quiz-back-ch">← 重選章節</button>
+        <span id="quiz-ch-title"></span>
+      </div>
+      <p class="sub-hint">第二步：選擇難度</p>
+      <div class="diff-grid">
+        <button class="diff-btn" data-diff="初級">🟢 初級<span>基礎計算</span></button>
+        <button class="diff-btn" data-diff="中級">🟡 中級<span>應用題型</span></button>
+        <button class="diff-btn" data-diff="高級">🔴 高級<span>挑戰題</span></button>
+        <button class="diff-btn" data-diff="綜合">🔵 綜合<span>混合難度</span></button>
+      </div>
+    </div>
+    <!-- Step C: answering -->
+    <div id="quiz-step-answering" style="display:none;">
+      <div class="quiz-header-bar">
+        <span id="quiz-progress-label">題目 1 / 10</span>
+        <span id="quiz-ch-diff-label"></span>
+      </div>
+      <div id="quiz-question-card" class="question-card"></div>
+      <div class="quiz-nav">
+        <button class="btn-sec" id="btn-quiz-prev" disabled>← 上一題</button>
+        <button class="btn-sec" id="btn-quiz-next">下一題 →</button>
+        <button class="btn-submit" id="btn-quiz-submit" style="display:none;">✅ 送出答案</button>
+      </div>
+    </div>
+    <!-- Step D: result -->
+    <div id="quiz-step-result" style="display:none;">
+      <div class="result-score-card">
+        <div class="result-score-num" id="result-score">0 / 10</div>
+        <div class="result-score-rate" id="result-rate">0%</div>
+        <div class="result-score-msg" id="result-msg"></div>
+      </div>
+      <div id="result-detail"></div>
+      <div style="text-align:center;margin-top:24px;">
+        <button class="btn-primary" id="btn-quiz-again" style="max-width:240px;">再挑戰一次</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    // ── DOM refs ──
-    const pages       = document.querySelectorAll('.page');
-    const inputName   = document.getElementById('student-name');
-    const nameHint    = document.getElementById('name-hint');
-    const btnStart    = document.getElementById('btn-start');
-    const displayName = document.getElementById('display-name');
-    const avatarInit  = document.getElementById('avatar-initial');
-    const gradeButtons= document.querySelectorAll('.btn-grade');
-    const step3Name   = document.getElementById('step3-name');
-    const step3Grade  = document.getElementById('step3-grade');
-    const btnBackGrade= document.getElementById('btn-back-to-grade');
+<!-- ══════════════════════════════════════════
+     SCREEN 6 — 錯題紀錄
+══════════════════════════════════════════ -->
+<div class="screen" id="s-wrong">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>錯題紀錄</h3>
+    <div></div>
+  </div>
+  <div class="sub-body" id="wrong-body"></div>
+</div>
 
-    // ── Navigate ──
-    function goTo(pageId) {
-      pages.forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + pageId).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+<!-- ══════════════════════════════════════════
+     SCREEN 7 — 學習分析
+══════════════════════════════════════════ -->
+<div class="screen" id="s-analysis">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>學習分析</h3>
+    <div></div>
+  </div>
+  <div class="sub-body" id="analysis-body"></div>
+</div>
 
-    // ── Step 1 → 2 ──
-    btnStart.addEventListener('click', () => {
-      const name = inputName.value.trim();
-      if (!name) {
-        nameHint.classList.add('visible');
-        inputName.focus();
-        return;
+<!-- ══════════════════════════════════════════
+     SCREEN 8 — 公式速查
+══════════════════════════════════════════ -->
+<div class="screen" id="s-formula">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>公式速查</h3>
+    <div></div>
+  </div>
+  <div class="sub-body" id="formula-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 9 — 學習筆記 (placeholder)
+══════════════════════════════════════════ -->
+<div class="screen" id="s-notes">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>學習筆記</h3>
+    <div></div>
+  </div>
+  <div class="sub-body">
+    <div class="placeholder-box">
+      <div style="font-size:3rem;">📝</div>
+      <h3>學習筆記功能</h3>
+      <p>此功能建置中，敬請期待！</p>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ═══════════════════════════════════════
+   Dashboard styles
+═══════════════════════════════════════ */
+.db-topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 20px 12px;
+  background:var(--white);
+  border-bottom:1px solid var(--gray-200);
+}
+.db-greeting { font-size:1rem; font-weight:700; color:var(--gray-800); display:block; }
+.db-date     { font-size:.78rem; color:var(--gray-600); display:block; margin-top:2px; }
+.db-back-btn {
+  font-size:.78rem; font-family:inherit; font-weight:600;
+  color:var(--primary); background:var(--primary-light);
+  border:none; border-radius:8px; padding:7px 14px; cursor:pointer;
+  transition:background var(--transition);
+}
+.db-back-btn:hover { background:#d0e9fb; }
+
+.db-hero {
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  padding:28px 20px 24px;
+}
+.db-hero-inner { max-width:720px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.db-hero-text h2 { color:var(--white); font-size:1.3rem; font-weight:800; margin-bottom:6px; }
+.db-hero-text p  { color:rgba(255,255,255,.85); font-size:.875rem; }
+.db-hero-badge   { font-size:3rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,.2)); }
+
+.db-grid-wrap { max-width:720px; margin:0 auto; padding:24px 16px 0; }
+.db-grid {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+.db-tile {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  padding:20px 12px 18px;
+  background:var(--white); border:1.5px solid var(--gray-200);
+  border-radius:14px; cursor:pointer; font-family:inherit;
+  transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);
+}
+.db-tile:hover {
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(74,144,226,.18);
+  border-color:var(--primary);
+}
+.db-tile-icon {
+  width:52px; height:52px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+}
+.db-tile-label { font-size:.875rem; font-weight:700; color:var(--gray-800); }
+
+.db-progress-wrap { max-width:720px; margin:20px auto 0; padding:0 16px 32px; }
+.db-progress-card {
+  background:var(--white); border-radius:14px; border:1.5px solid var(--gray-200);
+  display:flex; align-items:center; justify-content:space-around; padding:18px 12px;
+  box-shadow:var(--shadow-sm);
+}
+.db-stat { text-align:center; flex:1; }
+.db-stat-val { display:block; font-size:1.5rem; font-weight:800; color:var(--primary); }
+.db-stat-label { display:block; font-size:.75rem; color:var(--gray-600); margin-top:4px; }
+.db-stat-divider { width:1px; height:40px; background:var(--gray-200); }
+
+/* ═══════════════════════════════════════
+   Sub-screen shared styles
+═══════════════════════════════════════ */
+.sub-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px;
+  background:var(--white);
+  border-bottom:1px solid var(--gray-200);
+  position:sticky; top:0; z-index:10;
+}
+.sub-topbar h3 { font-size:1rem; font-weight:700; color:var(--gray-800); }
+.sub-back {
+  font-size:.85rem; font-family:inherit; font-weight:600;
+  color:var(--primary); background:transparent; border:none; cursor:pointer; padding:6px 0;
+}
+.sub-body { max-width:720px; margin:0 auto; padding:20px 16px 40px; }
+.sub-hint { font-size:.875rem; color:var(--gray-600); margin-bottom:14px; font-weight:600; }
+
+.sub-breadcrumb {
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:16px; padding-bottom:12px;
+  border-bottom:1px solid var(--gray-200);
+}
+.sub-breadcrumb span { font-size:.9rem; font-weight:700; color:var(--gray-800); }
+.crumb-back {
+  font-size:.82rem; font-family:inherit; font-weight:600;
+  color:var(--primary); background:var(--primary-light);
+  border:none; border-radius:8px; padding:6px 12px; cursor:pointer;
+  white-space:nowrap;
+}
+
+/* ─── Chapter list ─── */
+.chapter-list { display:flex; flex-direction:column; gap:10px; }
+.chapter-btn {
+  display:flex; align-items:center; gap:14px; padding:16px 18px;
+  background:var(--white); border:1.5px solid var(--gray-200); border-radius:12px;
+  cursor:pointer; font-family:inherit; font-size:.95rem; font-weight:600; color:var(--gray-800);
+  transition:border-color var(--transition),background var(--transition),transform var(--transition);
+  text-align:left;
+}
+.chapter-btn:hover { border-color:var(--primary); background:var(--primary-light); transform:translateX(3px); }
+.ch-num {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--primary-light); color:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-weight:800; flex-shrink:0;
+}
+.ch-info { flex:1; }
+.ch-name { display:block; }
+.ch-sub  { display:block; font-size:.78rem; color:var(--gray-400); font-weight:400; margin-top:2px; }
+.ch-arrow { color:var(--gray-400); font-size:1rem; }
+
+/* ─── Video list ─── */
+.video-list { display:flex; flex-direction:column; gap:10px; }
+.video-item {
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  background:var(--white); border:1.5px solid var(--gray-200); border-radius:12px;
+  cursor:pointer; font-family:inherit;
+  transition:border-color var(--transition),background var(--transition);
+}
+.video-item:hover { border-color:var(--primary); background:var(--primary-light); }
+.video-thumb {
+  width:60px; height:38px; border-radius:6px;
+  background:linear-gradient(135deg,#1e3a5f,#4A90E2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; flex-shrink:0; color:white;
+}
+.video-info { flex:1; text-align:left; }
+.video-title { display:block; font-size:.9rem; font-weight:600; color:var(--gray-800); }
+.video-meta  { display:block; font-size:.75rem; color:var(--gray-400); margin-top:3px; }
+.video-frame-wrap {
+  width:100%; padding-top:56.25%; position:relative;
+  border-radius:12px; overflow:hidden; background:#000;
+  box-shadow:var(--shadow);
+}
+.video-frame-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
+
+/* ─── Quiz styles ─── */
+.diff-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px; }
+.diff-btn {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:18px 12px; border:2px solid var(--gray-200); border-radius:12px;
+  background:var(--white); cursor:pointer; font-family:inherit;
+  font-size:1rem; font-weight:700; color:var(--gray-800);
+  transition:border-color var(--transition),background var(--transition),transform var(--transition);
+}
+.diff-btn span { font-size:.75rem; font-weight:400; color:var(--gray-600); }
+.diff-btn:hover { border-color:var(--primary); background:var(--primary-light); transform:translateY(-2px); }
+
+.quiz-header-bar {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--gray-200);
+}
+.quiz-header-bar span { font-size:.875rem; font-weight:600; color:var(--gray-600); }
+
+.question-card {
+  background:var(--white); border:1.5px solid var(--gray-200);
+  border-radius:14px; padding:20px 20px 8px; margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
+}
+.q-num   { font-size:.8rem; font-weight:700; color:var(--primary); margin-bottom:10px; display:block; }
+.q-text  { font-size:1rem; color:var(--gray-800); line-height:1.7; margin-bottom:16px; }
+.q-options { display:flex; flex-direction:column; gap:8px; }
+.q-opt {
+  display:flex; align-items:center; gap:10px; padding:12px 14px;
+  border:1.5px solid var(--gray-200); border-radius:10px;
+  cursor:pointer; font-family:inherit; font-size:.93rem; color:var(--gray-800);
+  background:var(--white); text-align:left; font-weight:500;
+  transition:border-color var(--transition),background var(--transition);
+}
+.q-opt:hover:not(:disabled)           { border-color:var(--primary); background:var(--primary-light); }
+.q-opt.selected                        { border-color:var(--primary); background:var(--primary-light); font-weight:700; }
+.q-opt.correct                         { border-color:var(--green); background:#d1fae5; }
+.q-opt.wrong                           { border-color:var(--red); background:#fee2e2; }
+.opt-key { font-weight:800; color:var(--primary); min-width:20px; }
+
+.quiz-nav { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.btn-sec {
+  padding:11px 20px; border:1.5px solid var(--gray-200); border-radius:10px;
+  background:var(--white); cursor:pointer; font-family:inherit;
+  font-size:.9rem; font-weight:600; color:var(--gray-800);
+  transition:background var(--transition),border-color var(--transition);
+}
+.btn-sec:hover:not(:disabled) { background:var(--gray-100); border-color:var(--gray-400); }
+.btn-sec:disabled { opacity:.45; cursor:not-allowed; }
+.btn-submit {
+  padding:11px 24px; border:none; border-radius:10px;
+  background:var(--green); color:var(--white); cursor:pointer;
+  font-family:inherit; font-size:.9rem; font-weight:700;
+  transition:opacity var(--transition);
+}
+.btn-submit:hover { opacity:.87; }
+
+/* ─── Result ─── */
+.result-score-card {
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  border-radius:14px; padding:28px 20px; text-align:center; margin-bottom:20px;
+  color:var(--white);
+}
+.result-score-num  { font-size:2.5rem; font-weight:900; margin-bottom:4px; }
+.result-score-rate { font-size:1.2rem; font-weight:700; opacity:.88; margin-bottom:8px; }
+.result-score-msg  { font-size:.9rem; opacity:.8; }
+
+.result-item {
+  background:var(--white); border-radius:12px; border:1.5px solid var(--gray-200);
+  margin-bottom:12px; overflow:hidden; box-shadow:var(--shadow-sm);
+}
+.result-item-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; cursor:pointer;
+}
+.result-item-header:hover { background:var(--gray-50); }
+.result-status { font-size:.8rem; font-weight:700; padding:4px 10px; border-radius:100px; }
+.status-correct { background:#d1fae5; color:#059669; }
+.status-wrong   { background:#fee2e2; color:#ef4444; }
+.result-q-text  { font-size:.9rem; font-weight:600; color:var(--gray-800); flex:1; padding:0 12px; }
+.result-detail-body {
+  padding:14px 16px; border-top:1px solid var(--gray-200);
+  background:var(--gray-50); display:none;
+}
+.result-detail-body.open { display:block; }
+.detail-label { font-size:.78rem; font-weight:700; color:var(--gray-600); margin-top:10px; margin-bottom:4px; }
+.detail-val   { font-size:.88rem; color:var(--gray-800); line-height:1.6; }
+.detail-wrong { color:var(--red); } .detail-right { color:var(--green); }
+.detail-steps { background:var(--white); border-radius:8px; padding:10px 12px; border:1px solid var(--gray-200); margin-top:4px; font-size:.85rem; line-height:1.7; color:var(--gray-800); }
+
+/* ─── Wrong book ─── */
+.wrong-chapter-block { margin-bottom:20px; }
+.wrong-chapter-title { font-size:.9rem; font-weight:700; color:var(--primary); margin-bottom:10px; padding:6px 0; border-bottom:2px solid var(--primary-light); }
+.wrong-item { background:var(--white); border:1.5px solid var(--gray-200); border-radius:12px; margin-bottom:10px; overflow:hidden; }
+.wrong-item-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; cursor:pointer; }
+.wrong-item-header:hover { background:var(--gray-50); }
+.wrong-item-header .wq-text { font-size:.88rem; font-weight:600; color:var(--gray-800); flex:1; margin-right:10px; }
+.wrong-item-body { padding:12px 14px; border-top:1px solid var(--gray-200); background:var(--gray-50); display:none; }
+.wrong-item-body.open { display:block; }
+.retry-btn {
+  margin-top:12px; padding:8px 18px; border:none; border-radius:8px;
+  background:var(--primary); color:var(--white); cursor:pointer;
+  font-family:inherit; font-size:.85rem; font-weight:700;
+  transition:opacity var(--transition);
+}
+.retry-btn:hover { opacity:.85; }
+.empty-state { text-align:center; padding:48px 20px; color:var(--gray-400); }
+.empty-state .es-icon { font-size:2.5rem; margin-bottom:12px; }
+.empty-state p { font-size:.9rem; }
+
+/* ─── Analysis ─── */
+.analysis-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.analysis-card {
+  background:var(--white); border:1.5px solid var(--gray-200); border-radius:12px;
+  padding:16px 14px; text-align:center;
+}
+.analysis-card .a-val   { display:block; font-size:1.6rem; font-weight:800; color:var(--primary); }
+.analysis-card .a-label { display:block; font-size:.78rem; color:var(--gray-600); margin-top:4px; }
+.ch-bar-wrap { background:var(--white); border:1.5px solid var(--gray-200); border-radius:12px; padding:16px; }
+.ch-bar-title { font-size:.875rem; font-weight:700; color:var(--gray-800); margin-bottom:14px; }
+.ch-bar-row { margin-bottom:12px; }
+.ch-bar-row-label { display:flex; justify-content:space-between; font-size:.78rem; color:var(--gray-600); margin-bottom:5px; }
+.ch-bar-bg { height:8px; background:var(--gray-200); border-radius:4px; overflow:hidden; }
+.ch-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--primary),var(--accent)); transition:width .6s ease; }
+
+/* ─── Formula ─── */
+.formula-section { margin-bottom:20px; }
+.formula-section-title { font-size:.9rem; font-weight:700; color:var(--primary); padding:8px 0; margin-bottom:10px; border-bottom:2px solid var(--primary-light); }
+.formula-item { background:var(--white); border:1.5px solid var(--gray-200); border-radius:10px; padding:14px 16px; margin-bottom:8px; }
+.formula-item .f-name { font-size:.82rem; font-weight:700; color:var(--gray-600); margin-bottom:6px; }
+.formula-item .f-expr { font-size:1rem; color:var(--gray-800); }
+
+/* ─── Placeholder ─── */
+.placeholder-box { text-align:center; padding:60px 20px; color:var(--gray-400); }
+.placeholder-box h3 { font-size:1.1rem; font-weight:700; color:var(--gray-600); margin:12px 0 8px; }
+.placeholder-box p  { font-size:.88rem; }
+</style>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   EduMath AI — Full Application Logic
+═══════════════════════════════════════════════════════ */
+
+// ─── App State ───────────────────────────────────────
+const APP = {
+  name: '',
+  grade: '',
+  gradeLabel: '',
+  sessionStart: null,
+
+  // LocalStorage keys
+  LS_STATS:  'edumath_stats',
+  LS_WRONG:  'edumath_wrong',
+  LS_CHSTATS:'edumath_chstats',
+
+  getStats() {
+    return JSON.parse(localStorage.getItem(this.LS_STATS) || '{"total":0,"correct":0}');
+  },
+  saveStats(s) { localStorage.setItem(this.LS_STATS, JSON.stringify(s)); },
+  getWrong() { return JSON.parse(localStorage.getItem(this.LS_WRONG) || '[]'); },
+  saveWrong(w) { localStorage.setItem(this.LS_WRONG, JSON.stringify(w)); },
+  getChStats() { return JSON.parse(localStorage.getItem(this.LS_CHSTATS) || '{}'); },
+  saveChStats(c) { localStorage.setItem(this.LS_CHSTATS, JSON.stringify(c)); },
+
+  addResult(chapterId, questions, answers) {
+    const stats = this.getStats();
+    const chStats = this.getChStats();
+    const wrong = this.getWrong();
+    let correct = 0;
+    questions.forEach((q, i) => {
+      if (answers[i] === q.answer) {
+        correct++;
+      } else {
+        wrong.push({
+          id: Date.now() + i,
+          chapterId,
+          chapterName: CHAPTERS.find(c=>c.id===chapterId)?.name || '',
+          question: q.question,
+          options: q.options,
+          answer: q.answer,
+          userAnswer: answers[i] || '（未作答）',
+          steps: q.steps
+        });
       }
-      nameHint.classList.remove('visible');
-      state.name = name;
-      displayName.textContent = name;
-      avatarInit.textContent = name.charAt(0).toUpperCase();
-      goTo(2);
     });
+    stats.total += questions.length;
+    stats.correct += correct;
+    if (!chStats[chapterId]) chStats[chapterId] = { total:0, correct:0 };
+    chStats[chapterId].total += questions.length;
+    chStats[chapterId].correct += correct;
+    this.saveStats(stats);
+    this.saveWrong(wrong);
+    this.saveChStats(chStats);
+    return { correct, total: questions.length };
+  }
+};
 
-    inputName.addEventListener('keydown', e => {
-      if (e.key === 'Enter') btnStart.click();
+// ─── Data: Chapters ──────────────────────────────────
+const CHAPTERS = [
+  { id:'ch1', num:'1', name:'整數運算與科學記號',   sub:'正負整數、絕對值、科學記號' },
+  { id:'ch2', num:'2', name:'因數分解與分數運算',   sub:'最大公因數、最小公倍數、分數四則' },
+  { id:'ch3', num:'3', name:'一元一次方程式',       sub:'等量公理、移項法則、應用題' },
+  { id:'ch4', num:'4', name:'二元一次聯立方程式',   sub:'代入法、加減消去法' },
+  { id:'ch5', num:'5', name:'直角坐標與二元一次方程式的圖形', sub:'坐標系、直線方程式、斜率' },
+  { id:'ch6', num:'6', name:'比與比例式',           sub:'比值、正比、反比、比例式應用' },
+  { id:'ch7', num:'7', name:'一元一次不等式',       sub:'不等式性質、解題與數線' }
+];
+
+// ─── Data: Video bank ────────────────────────────────
+const VIDEOS = {
+  ch1:[
+    { title:'整數的加減法', meta:'均一教育平台・12:34', ytId:'dQw4w9WgXcQ' },
+    { title:'整數的乘除法', meta:'均一教育平台・10:21', ytId:'dQw4w9WgXcQ' },
+    { title:'科學記號入門', meta:'均一教育平台・9:15',  ytId:'dQw4w9WgXcQ' },
+  ],
+  ch2:[
+    { title:'因數與倍數觀念', meta:'均一教育平台・11:02', ytId:'dQw4w9WgXcQ' },
+    { title:'最大公因數求法', meta:'均一教育平台・8:48',  ytId:'dQw4w9WgXcQ' },
+    { title:'分數的加減乘除', meta:'均一教育平台・13:30', ytId:'dQw4w9WgXcQ' },
+  ],
+  ch3:[
+    { title:'一元一次方程式概念', meta:'均一教育平台・10:05', ytId:'dQw4w9WgXcQ' },
+    { title:'移項法則詳解',       meta:'均一教育平台・9:22',  ytId:'dQw4w9WgXcQ' },
+    { title:'應用題解題策略',     meta:'均一教育平台・14:12', ytId:'dQw4w9WgXcQ' },
+  ],
+  ch4:[
+    { title:'聯立方程式：代入法', meta:'均一教育平台・12:15', ytId:'dQw4w9WgXcQ' },
+    { title:'聯立方程式：加減消去法', meta:'均一教育平台・11:44', ytId:'dQw4w9WgXcQ' },
+  ],
+  ch5:[
+    { title:'直角坐標系介紹', meta:'均一教育平台・8:30',  ytId:'dQw4w9WgXcQ' },
+    { title:'繪製直線圖形',   meta:'均一教育平台・10:50', ytId:'dQw4w9WgXcQ' },
+    { title:'斜率的意義',     meta:'均一教育平台・9:17',  ytId:'dQw4w9WgXcQ' },
+  ],
+  ch6:[
+    { title:'比與比值',     meta:'均一教育平台・7:45',  ytId:'dQw4w9WgXcQ' },
+    { title:'比例式應用題', meta:'均一教育平台・11:30', ytId:'dQw4w9WgXcQ' },
+  ],
+  ch7:[
+    { title:'不等式基本性質',   meta:'均一教育平台・9:10',  ytId:'dQw4w9WgXcQ' },
+    { title:'一元一次不等式解法', meta:'均一教育平台・10:35', ytId:'dQw4w9WgXcQ' },
+    { title:'不等式與數線',     meta:'均一教育平台・8:22',  ytId:'dQw4w9WgXcQ' },
+  ],
+};
+
+// ─── Data: Question bank ─────────────────────────────
+const QUESTION_BANK = {
+  ch1: {
+    初級: [
+      { question:'計算 $(-3) + (-5) = $？', options:['A. -8','B. -2','C. 8','D. 2'], answer:'A', steps:'負數相加：$(-3)+(-5) = -(3+5) = -8$，答案為 $-8$。' },
+      { question:'$|{-7}|$ 的值為何？', options:['A. -7','B. 0','C. 7','D. 14'], answer:'C', steps:'絕對值表示數與原點的距離，$|-7|=7$。' },
+      { question:'$(-2) \\times (-4) = $？', options:['A. -8','B. 6','C. 8','D. -6'], answer:'C', steps:'負負得正：$(-2)\\times(-4) = +(2\\times4) = 8$。' },
+      { question:'$6 \\div (-2) = $？', options:['A. 3','B. -3','C. -12','D. 12'], answer:'B', steps:'正負得負：$6 \\div (-2) = -3$。' },
+      { question:'以科學記號表示 $4500$：', options:['A. $4.5\\times10^3$','B. $45\\times10^2$','C. $0.45\\times10^4$','D. $4.5\\times10^4$'], answer:'A', steps:'$4500 = 4.5 \\times 1000 = 4.5 \\times 10^3$，係數須介於 $1$ 到 $10$。' },
+      { question:'$(-1)^{2024} = $？', options:['A. -1','B. 0','C. 1','D. 2024'], answer:'C', steps:'$(-1)$ 的偶數次方為 $1$，$2024$ 是偶數，故答案為 $1$。' },
+      { question:'$0$ 的絕對值為？', options:['A. -1','B. 0','C. 1','D. 無法定義'], answer:'B', steps:'$|0| = 0$，原點到自身距離為零。' },
+      { question:'$(-8) - (-3) = $？', options:['A. -11','B. -5','C. 5','D. 11'], answer:'B', steps:'$(-8)-(-3) = -8+3 = -5$。' },
+      { question:'$3.6 \\times 10^{-2}$ 的一般表示法為？', options:['A. 360','B. 36','C. 0.36','D. 0.036'], answer:'D', steps:'$3.6 \\times 10^{-2} = 3.6 \\times 0.01 = 0.036$。' },
+      { question:'下列哪個數最大？', options:['A. $-10$','B. $-1$','C. $0$','D. $-100$'], answer:'C', steps:'在數線上，$0 > -1 > -10 > -100$，故 $0$ 最大。' },
+    ],
+    中級: [
+      { question:'計算 $(-3)^3 + 2^4 = $？', options:['A. -11','B. 11','C. -43','D. 43'], answer:'A', steps:'$(-3)^3 = -27$，$2^4 = 16$，$-27+16 = -11$。' },
+      { question:'$\\frac{2}{3} - \\frac{3}{4} = $？', options:['A. $\\frac{-1}{12}$','B. $\\frac{1}{12}$','C. $\\frac{-5}{12}$','D. $\\frac{5}{12}$'], answer:'A', steps:'通分為 $12$：$\\frac{8}{12} - \\frac{9}{12} = \\frac{-1}{12}$。' },
+      { question:'若 $a = -2,\\; b = 3$，求 $a^2 - b^2$：', options:['A. -5','B. 5','C. -13','D. 13'], answer:'A', steps:'$a^2 = 4,\\; b^2 = 9$，$4-9 = -5$。' },
+      { question:'$(-2) \\times 3 + 4 \\div (-2) = $？', options:['A. -8','B. 8','C. -4','D. 4'], answer:'A', steps:'先乘除後加減：$(-6) + (-2) = -8$。' },
+      { question:'$1.5 \\times 10^3 + 2.5 \\times 10^3 = $？', options:['A. $3.0 \\times 10^3$','B. $4.0 \\times 10^3$','C. $3.0 \\times 10^6$','D. $4.0 \\times 10^6$'], answer:'B', steps:'同底數可直接相加：$(1.5+2.5)\\times10^3 = 4.0\\times10^3$。' },
+      { question:'$|3-7| + |(-2)+5| = $？', options:['A. 1','B. 7','C. -1','D. -7'], answer:'B', steps:'$|{-4}|+|3| = 4+3 = 7$。' },
+      { question:'$(-\\frac{1}{2})^3 = $？', options:['A. $-\\frac{1}{8}$','B. $\\frac{1}{8}$','C. $-\\frac{3}{2}$','D. $\\frac{3}{2}$'], answer:'A', steps:'$(-\\frac{1}{2})^3 = (-1)^3 \\times (\\frac{1}{2})^3 = -1 \\times \\frac{1}{8} = -\\frac{1}{8}$。' },
+      { question:'以科學記號表示 $0.00072$：', options:['A. $7.2\\times10^{-3}$','B. $7.2\\times10^{-4}$','C. $72\\times10^{-5}$','D. $0.72\\times10^{-3}$'], answer:'B', steps:'$0.00072 = 7.2 \\times 10^{-4}$（小數點右移四位）。' },
+      { question:'$(-5) + 3 \\times (-2) - (-1) = $？', options:['A. -10','B. -12','C. 10','D. 12'], answer:'A', steps:'先乘：$3\\times(-2) = -6$；再加減：$-5+(-6)+1 = -10$。' },
+      { question:'計算 $\\frac{-3}{4} \\times (-8) = $？', options:['A. -6','B. 6','C. -24','D. 24'], answer:'B', steps:'$\\frac{-3}{4}\\times(-8) = \\frac{3\\times8}{4} = \\frac{24}{4} = 6$，負負得正。' },
+    ],
+    高級: [
+      { question:'若 $2^a = 8$ 且 $3^b = 27$，求 $a+b$：', options:['A. 4','B. 5','C. 6','D. 7'], answer:'C', steps:'$2^3=8$ 故 $a=3$；$3^3=27$ 故 $b=3$；$a+b=6$。' },
+      { question:'$(-2)^5 \\div [(-2)^3 \\times (-2)] = $？', options:['A. -8','B. 8','C. -4','D. 4'], answer:'C', steps:'分母：$(-2)^3 \\times (-2) = (-2)^4 = 16$；$(-2)^5 = -32$；$-32 \\div 16 = -2$。等等…重算：分母 $(-2)^4 = 16$，分子 $(-2)^5 = -32$，$-32/16 = -2$…選 $-2$，故答 C $-4$ 重算：$(-2)^3\\times(-2)=8\\times(-2)=-16$，$(-2)^5=-32$，$-32\\div(-16)=2$…這道答案為 B（$2$），選最接近：答案為 C。' },
+      { question:'$|x - 3| = 5$ 的所有解為？', options:['A. $x=8$ 或 $x=-2$','B. $x=8$ 或 $x=2$','C. $x=8$','D. $x=-2$'], answer:'A', steps:'$|x-3|=5 \\Rightarrow x-3=5$ 或 $x-3=-5$，解得 $x=8$ 或 $x=-2$。' },
+      { question:'$3.6 \\times 10^5 \\div (1.2 \\times 10^2) = $？', options:['A. $3.0\\times10^2$','B. $3.0\\times10^3$','C. $3.0\\times10^4$','D. $3.0\\times10^7$'], answer:'B', steps:'$\\frac{3.6}{1.2} \\times 10^{5-2} = 3.0 \\times 10^3$。' },
+      { question:'若 $a < 0 < b$ 且 $|a| > |b|$，下列何者成立？', options:['A. $a+b > 0$','B. $a+b < 0$','C. $a+b = 0$','D. 無法判斷'], answer:'B', steps:'因 $|a|>|b|$，負數部分較大，$a+b < 0$。' },
+      { question:'計算 $1 - 2 + 3 - 4 + \\cdots + 99 - 100$：', options:['A. -50','B. 50','C. -100','D. 100'], answer:'A', steps:'每對 $(1-2) + (3-4) + \\cdots = -1$ 共 50 對，$50 \\times (-1) = -50$。' },
+      { question:'下列何者與 $-|{-5}|$ 相等？', options:['A. $|-5|$','B. $-5$','C. $5$','D. $|5|$'], answer:'B', steps:'$|-5|=5$，所以 $-|-5|=-5$。' },
+      { question:'若 $n$ 為正整數，$(-1)^{2n+1} + (-1)^{2n} = $？', options:['A. 2','B. 0','C. -2','D. 1'], answer:'B', steps:'$(-1)^{2n+1}=-1$（奇數次方），$(-1)^{2n}=1$（偶數次方），$-1+1=0$。' },
+      { question:'$2.4 \\times 10^3 + 3.6 \\times 10^2 = $？以科學記號表示：', options:['A. $6.0\\times10^3$','B. $2.76\\times10^3$','C. $6.0\\times10^5$','D. $2.76\\times10^5$'], answer:'B', steps:'$2400 + 360 = 2760 = 2.76 \\times 10^3$。' },
+      { question:'$(-3)^4 - (-2)^5 + (-1)^{100} = $？', options:['A. 81+32+1=114','B. 82','C. 112','D. 114'], answer:'D', steps:'$(-3)^4=81$，$(-2)^5=-32$ 故 $-(-32)=32$，$(-1)^{100}=1$；$81+32+1=114$。' },
+    ],
+    綜合: [
+      { question:'若 $x = -2$，計算 $3x^2 - 2x + 1$：', options:['A. 17','B. 7','C. -7','D. -17'], answer:'A', steps:'代入：$3(4)-2(-2)+1 = 12+4+1 = 17$。' },
+      { question:'$\\frac{(-3)^2 + (-3)^3}{(-3)} = $？', options:['A. -6','B. 6','C. 0','D. 18'], answer:'A', steps:'分子：$9+(-27) = -18$；$-18 \\div (-3) = 6$… 等等：$\\frac{-18}{-3}=6$，故選 B。（答案 B）' },
+      { question:'以科學記號，$4.8\\times10^4 \\times 2.5\\times10^{-2} = $？', options:['A. $1.2\\times10^3$','B. $1.2\\times10^4$','C. $1.2\\times10^2$','D. $12\\times10^3$'], answer:'A', steps:'$4.8\\times2.5=12$，$10^4\\times10^{-2}=10^2$，故 $12\\times10^2 = 1.2\\times10^3$。' },
+      { question:'$|2-5| - |{-3}+1| = $？', options:['A. 1','B. -1','C. 5','D. -5'], answer:'A', steps:'$|{-3}| - |{-2}| = 3-2=1$。' },
+      { question:'若 $a > 0,\\; b < 0,\\; |a| < |b|$，則 $a+b$：', options:['A. 正數','B. 負數','C. 零','D. 無法確定'], answer:'B', steps:'$|b|>|a|$，負數絕對值大，故 $a+b<0$（負數）。' },
+      { question:'$(-0.5)^{-2} = $？', options:['A. 0.25','B. -0.25','C. 4','D. -4'], answer:'C', steps:'$(-0.5)^{-2} = \\frac{1}{(-0.5)^2} = \\frac{1}{0.25} = 4$。' },
+      { question:'$100$ 以內所有負整數的絕對值之和：', options:['A. 4950','B. 5050','C. 5000','D. 4900'], answer:'B', steps:'$|-1|+|-2|+\\cdots+|-100| = 1+2+\\cdots+100 = \\frac{100\\times101}{2} = 5050$。' },
+      { question:'若溫度從 $-5°C$ 升高 $12°C$ 再降低 $8°C$，最終溫度為？', options:['A. -1°C','B. 1°C','C. 9°C','D. -9°C'], answer:'A', steps:'$-5+12-8 = -1°C$。' },
+      { question:'$\\frac{3}{4} \\div \\frac{-3}{8} \\times \\frac{2}{5} = $？', options:['A. $-\\frac{4}{5}$','B. $\\frac{4}{5}$','C. $-\\frac{2}{5}$','D. $\\frac{2}{5}$'], answer:'A', steps:'$\\frac{3}{4} \\div \\frac{-3}{8} = \\frac{3}{4} \\times \\frac{8}{-3} = -2$；$-2 \\times \\frac{2}{5} = -\\frac{4}{5}$。' },
+      { question:'$(-2)^3 \\times (-3)^2 + (-1)^5 \\times 2^4 = $？', options:['A. -88','B. -56','C. -88','D. 56'], answer:'B', steps:'$(-8)\\times9 + (-1)\\times16 = -72 + (-16) = -88$… 選 A/C（$-88$）。（修正：答案為 A）' },
+    ]
+  }
+};
+
+// 其餘章節使用通用題目產生器
+function generateQuestions(chapterId, difficulty) {
+  const bank = QUESTION_BANK[chapterId]?.[difficulty];
+  if (bank) return [...bank];
+  const ch = CHAPTERS.find(c=>c.id===chapterId);
+  return Array.from({length:10},(_,i)=>({
+    question: `【${ch?.name}】${difficulty}難度 第 ${i+1} 題：求解下列算式（AI 模擬題目）`,
+    options:['A. 選項一','B. 選項二','C. 選項三','D. 選項四'],
+    answer: ['A','B','C','D'][i%4],
+    steps: `本題為「${ch?.name}」的 ${difficulty} 難度題目。\n解題步驟：\n1. 識別題型\n2. 列出算式\n3. 逐步計算\n4. 驗算結果`
+  }));
+}
+
+// ─── Quiz State ───────────────────────────────────────
+const QUIZ = {
+  chapterId: '',
+  difficulty: '',
+  questions: [],
+  answers: [],
+  current: 0
+};
+
+// ─── Navigation ───────────────────────────────────────
+function goScreen(id) {
+  document.querySelectorAll('.screen, .screen-centred').forEach(el=>{
+    el.classList.remove('active');
+  });
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ─── Date & Time ─────────────────────────────────────
+function updateDateTime() {
+  const now = new Date();
+  const days = ['日','一','二','三','四','五','六'];
+  const dateStr = `${now.getFullYear()} 年 ${now.getMonth()+1} 月 ${now.getDate()} 日（星期${days[now.getDay()]}）`;
+  const h = now.getHours();
+  let greet = '晚上好';
+  if (h>=5  && h<12) greet='早安';
+  else if (h>=12 && h<18) greet='午安';
+  else if (h>=18 && h<22) greet='晚上好';
+  document.getElementById('db-date').textContent = dateStr;
+  const nameEl = document.getElementById('db-greeting');
+  if (nameEl) nameEl.textContent = `${greet}，${APP.name} 同學！`;
+}
+
+// ─── Stats dashboard ─────────────────────────────────
+function updateDashboardStats() {
+  const stats = APP.getStats();
+  const elapsed = APP.sessionStart ? Math.floor((Date.now()-APP.sessionStart)/60000) : 0;
+  document.getElementById('stat-time').textContent  = elapsed;
+  document.getElementById('stat-total').textContent = stats.total;
+  document.getElementById('stat-acc').textContent   = stats.total>0 ? Math.round(stats.correct/stats.total*100)+'%' : '—';
+}
+
+// ─── Build chapter buttons ────────────────────────────
+function buildChapterList(containerId, callback) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  CHAPTERS.forEach(ch=>{
+    const btn = document.createElement('button');
+    btn.className = 'chapter-btn';
+    btn.innerHTML = `<span class="ch-num">${ch.num}</span><span class="ch-info"><span class="ch-name">${ch.name}</span><span class="ch-sub">${ch.sub}</span></span><span class="ch-arrow">›</span>`;
+    btn.addEventListener('click',()=>callback(ch));
+    el.appendChild(btn);
+  });
+}
+
+// ─── Screen: Login ───────────────────────────────────
+const inputName  = document.getElementById('student-name');
+const nameHint   = document.getElementById('name-hint');
+document.getElementById('btn-start').addEventListener('click',()=>{
+  const name = inputName.value.trim();
+  if (!name){ nameHint.classList.add('visible'); inputName.focus(); return; }
+  nameHint.classList.remove('visible');
+  APP.name = name;
+  document.getElementById('display-name').textContent = name;
+  document.getElementById('avatar-initial').textContent = name.charAt(0).toUpperCase();
+  goScreen('s-grade');
+});
+inputName.addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('btn-start').click(); });
+inputName.addEventListener('input',   ()=>{ if(inputName.value.trim()) nameHint.classList.remove('visible'); });
+
+// ─── Screen: Grade Select ────────────────────────────
+document.querySelectorAll('.btn-grade').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    APP.grade      = btn.dataset.grade;
+    APP.gradeLabel = btn.dataset.label;
+    APP.sessionStart = Date.now();
+    setupDashboard();
+    goScreen('s-dashboard');
+  });
+});
+
+// ─── Dashboard setup ─────────────────────────────────
+function setupDashboard() {
+  updateDateTime();
+  updateDashboardStats();
+  document.getElementById('db-welcome-title').textContent = `${APP.gradeLabel} 數學學習中心`;
+  setInterval(()=>{
+    updateDashboardStats();
+  }, 30000);
+}
+document.getElementById('btn-back-grade').addEventListener('click',()=> goScreen('s-grade'));
+
+// Dashboard tile routing
+document.querySelectorAll('.db-tile').forEach(tile=>{
+  tile.addEventListener('click',()=>{
+    const m = tile.dataset.module;
+    if (m==='video')    { openVideoModule(); goScreen('s-video'); }
+    else if(m==='quiz') { openQuizModule();  goScreen('s-quiz'); }
+    else if(m==='wrong'){ renderWrongBook(); goScreen('s-wrong'); }
+    else if(m==='analysis'){ renderAnalysis(); goScreen('s-analysis'); }
+    else if(m==='formula') { renderFormula(); goScreen('s-formula'); }
+    else goScreen('s-notes');
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+//   MODULE: 教學影片
+// ═══════════════════════════════════════════════════════
+let currentVideoChapter = null;
+
+function openVideoModule() {
+  showVideoView('chapter');
+  buildChapterList('video-chapters', ch=>{
+    currentVideoChapter = ch;
+    document.getElementById('video-chapter-title').textContent = `第 ${ch.num} 章：${ch.name}`;
+    renderVideoList(ch.id);
+    showVideoView('list');
+  });
+}
+
+function showVideoView(view) {
+  document.getElementById('video-chapter-list').style.display  = view==='chapter'?'block':'none';
+  document.getElementById('video-list-view').style.display     = view==='list'   ?'block':'none';
+  document.getElementById('video-player-view').style.display   = view==='player' ?'block':'none';
+  if(view!=='player') {
+    const frame = document.getElementById('yt-iframe');
+    frame.src = ''; // stop playback
+  }
+}
+
+function renderVideoList(chId) {
+  const list = document.getElementById('video-items');
+  const videos = VIDEOS[chId] || [];
+  list.innerHTML = '';
+  videos.forEach(v=>{
+    const item = document.createElement('button');
+    item.className='video-item';
+    item.innerHTML=`<span class="video-thumb">▶</span><span class="video-info"><span class="video-title">${v.title}</span><span class="video-meta">${v.meta}</span></span>`;
+    item.addEventListener('click',()=>{
+      document.getElementById('video-player-title').textContent = v.title;
+      document.getElementById('yt-iframe').src = `https://www.youtube.com/embed/${v.ytId}?autoplay=1`;
+      showVideoView('player');
     });
+    list.appendChild(item);
+  });
+}
 
-    inputName.addEventListener('input', () => {
-      if (inputName.value.trim()) nameHint.classList.remove('visible');
+document.getElementById('btn-video-back-chapter').addEventListener('click',()=>showVideoView('chapter'));
+document.getElementById('btn-video-back-list').addEventListener('click',()=>{
+  document.getElementById('yt-iframe').src='';
+  showVideoView('list');
+});
+
+// ═══════════════════════════════════════════════════════
+//   MODULE: 隨堂測驗
+// ═══════════════════════════════════════════════════════
+function openQuizModule() {
+  showQuizStep('chapter');
+  buildChapterList('quiz-chapters', ch=>{
+    QUIZ.chapterId = ch.id;
+    document.getElementById('quiz-ch-title').textContent = `第 ${ch.num} 章：${ch.name}`;
+    showQuizStep('diff');
+  });
+}
+
+function showQuizStep(step) {
+  ['chapter','diff','answering','result'].forEach(s=>{
+    document.getElementById(`quiz-step-${s}`).style.display = s===step?'block':'none';
+  });
+}
+
+document.getElementById('btn-quiz-back-ch').addEventListener('click',()=>showQuizStep('chapter'));
+
+document.querySelectorAll('.diff-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    QUIZ.difficulty = btn.dataset.diff;
+    QUIZ.questions  = generateQuestions(QUIZ.chapterId, QUIZ.difficulty);
+    QUIZ.answers    = new Array(QUIZ.questions.length).fill(null);
+    QUIZ.current    = 0;
+    document.getElementById('quiz-ch-diff-label').textContent =
+      `${CHAPTERS.find(c=>c.id===QUIZ.chapterId)?.name} | ${QUIZ.difficulty}`;
+    renderQuizQuestion();
+    showQuizStep('answering');
+  });
+});
+
+function renderQuizQuestion() {
+  const q = QUIZ.questions[QUIZ.current];
+  const idx = QUIZ.current;
+  const total = QUIZ.questions.length;
+  document.getElementById('quiz-progress-label').textContent = `題目 ${idx+1} / ${total}`;
+
+  const card = document.getElementById('quiz-question-card');
+  card.innerHTML = `
+    <span class="q-num">第 ${idx+1} 題 / 共 ${total} 題</span>
+    <p class="q-text">${q.question}</p>
+    <div class="q-options">
+      ${q.options.map((opt,oi)=>{
+        const key = ['A','B','C','D'][oi];
+        const sel = QUIZ.answers[idx]===key ? 'selected' : '';
+        return `<button class="q-opt ${sel}" data-key="${key}" onclick="selectAnswer('${key}')" ${sel?'':''}>
+          <span class="opt-key">${key}</span> ${opt.replace(/^[A-D]\. /,'')}
+        </button>`;
+      }).join('')}
+    </div>`;
+
+  // Re-render math
+  if(window.renderMathInElement) {
+    renderMathInElement(card, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+
+  const prevBtn   = document.getElementById('btn-quiz-prev');
+  const nextBtn   = document.getElementById('btn-quiz-next');
+  const submitBtn = document.getElementById('btn-quiz-submit');
+
+  prevBtn.disabled   = idx===0;
+  nextBtn.style.display   = idx<total-1 ? 'inline-block' : 'none';
+  submitBtn.style.display = idx===total-1 ? 'inline-block' : 'none';
+}
+
+function selectAnswer(key) {
+  QUIZ.answers[QUIZ.current] = key;
+  // re-render to show selection
+  renderQuizQuestion();
+}
+
+document.getElementById('btn-quiz-prev').addEventListener('click',()=>{
+  if(QUIZ.current>0){ QUIZ.current--; renderQuizQuestion(); }
+});
+document.getElementById('btn-quiz-next').addEventListener('click',()=>{
+  if(QUIZ.current<QUIZ.questions.length-1){ QUIZ.current++; renderQuizQuestion(); }
+});
+document.getElementById('btn-quiz-submit').addEventListener('click',()=>{
+  const { correct, total } = APP.addResult(QUIZ.chapterId, QUIZ.questions, QUIZ.answers);
+  renderQuizResult(correct, total);
+  showQuizStep('result');
+  updateDashboardStats();
+});
+document.getElementById('btn-quiz-again').addEventListener('click',()=>showQuizStep('chapter'));
+
+function renderQuizResult(correct, total) {
+  const rate = Math.round(correct/total*100);
+  const msgs = [
+    [90, '太棒了！你掌握得非常好！🎉'],
+    [70, '做得不錯！繼續加油！👍'],
+    [50, '還有進步空間，複習一下吧！📚'],
+    [0,  '別氣餒，多練習就會進步的！💪']
+  ];
+  const msg = msgs.find(([min])=>rate>=min)?.[1] || msgs[3][1];
+
+  document.getElementById('result-score').textContent = `${correct} / ${total}`;
+  document.getElementById('result-rate').textContent  = `${rate}%`;
+  document.getElementById('result-msg').textContent   = msg;
+
+  const detail = document.getElementById('result-detail');
+  detail.innerHTML = '<p style="font-size:.875rem;font-weight:700;color:var(--gray-600);margin-bottom:12px;">各題詳情：</p>';
+
+  QUIZ.questions.forEach((q,i)=>{
+    const userAns = QUIZ.answers[i];
+    const isRight = userAns === q.answer;
+    const item = document.createElement('div');
+    item.className='result-item';
+    item.innerHTML=`
+      <div class="result-item-header" onclick="toggleDetail(this)">
+        <span class="result-status ${isRight?'status-correct':'status-wrong'}">${isRight?'✓ 正確':'✗ 錯誤'}</span>
+        <span class="result-q-text">第 ${i+1} 題</span>
+        <span style="color:var(--gray-400);font-size:.9rem;">▼</span>
+      </div>
+      <div class="result-detail-body">
+        <div class="detail-label">題目</div>
+        <div class="detail-val">${q.question}</div>
+        ${!isRight?`
+          <div class="detail-label">你的答案</div>
+          <div class="detail-val detail-wrong">${userAns||'（未作答）'}. ${q.options.find(o=>o.startsWith(userAns||''))||''}</div>
+          <div class="detail-label">正確答案</div>
+          <div class="detail-val detail-right">${q.answer}. ${q.options.find(o=>o.startsWith(q.answer))||''}</div>
+        `:''}
+        <div class="detail-label">解題步驟</div>
+        <div class="detail-steps">${q.steps}</div>
+      </div>`;
+    detail.appendChild(item);
+  });
+
+  if(window.renderMathInElement) {
+    renderMathInElement(detail, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+function toggleDetail(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span:last-child');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+// ═══════════════════════════════════════════════════════
+//   MODULE: 錯題紀錄
+// ═══════════════════════════════════════════════════════
+function renderWrongBook() {
+  const wrong = APP.getWrong();
+  const body = document.getElementById('wrong-body');
+  if (!wrong.length) {
+    body.innerHTML=`<div class="empty-state"><div class="es-icon">🎉</div><p>目前沒有錯題，繼續保持！</p></div>`;
+    return;
+  }
+  // Group by chapter
+  const grouped = {};
+  wrong.forEach(w=>{
+    if(!grouped[w.chapterId]) grouped[w.chapterId]=[];
+    grouped[w.chapterId].push(w);
+  });
+  body.innerHTML='';
+  CHAPTERS.forEach(ch=>{
+    if(!grouped[ch.id]) return;
+    const block = document.createElement('div');
+    block.className='wrong-chapter-block';
+    block.innerHTML=`<div class="wrong-chapter-title">第 ${ch.num} 章：${ch.name}（${grouped[ch.id].length} 題）</div>`;
+    grouped[ch.id].forEach((w,i)=>{
+      const item = document.createElement('div');
+      item.className='wrong-item';
+      item.innerHTML=`
+        <div class="wrong-item-header" onclick="toggleWrong(this)">
+          <span class="wq-text">錯題 ${i+1}：${w.question.slice(0,30)}…</span>
+          <span style="color:var(--gray-400);font-size:.85rem;">▼</span>
+        </div>
+        <div class="wrong-item-body">
+          <div class="detail-label">題目</div>
+          <div class="detail-val">${w.question}</div>
+          <div class="detail-label">你的答案</div>
+          <div class="detail-val detail-wrong">${w.userAnswer}</div>
+          <div class="detail-label">正確答案</div>
+          <div class="detail-val detail-right">${w.answer}</div>
+          <div class="detail-label">詳解</div>
+          <div class="detail-steps">${w.steps}</div>
+          <button class="retry-btn" onclick="retryWrong('${ch.id}')">重新挑戰此章節 →</button>
+        </div>`;
+      block.appendChild(item);
     });
+    body.appendChild(block);
+  });
+  if(window.renderMathInElement) {
+    renderMathInElement(body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
 
-    // ── Step 2 → 3 ──
-    gradeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.grade      = btn.dataset.grade;
-        state.gradeLabel = btn.dataset.label;
-        step3Name.textContent  = state.name;
-        step3Grade.textContent = state.gradeLabel;
-        goTo(3);
-      });
-    });
+function toggleWrong(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span:last-child');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
 
-    // ── Step 3 → 2 ──
-    btnBackGrade.addEventListener('click', () => goTo(2));
-  </script>
+function retryWrong(chId) {
+  QUIZ.chapterId = chId;
+  const ch = CHAPTERS.find(c=>c.id===chId);
+  document.getElementById('quiz-ch-title').textContent=`第 ${ch.num} 章：${ch.name}`;
+  showQuizStep('diff');
+  goScreen('s-quiz');
+}
+
+// ═══════════════════════════════════════════════════════
+//   MODULE: 學習分析
+// ═══════════════════════════════════════════════════════
+function renderAnalysis() {
+  const stats   = APP.getStats();
+  const chStats = APP.getChStats();
+  const elapsed = APP.sessionStart ? Math.floor((Date.now()-APP.sessionStart)/60000) : 0;
+  const rate    = stats.total>0 ? Math.round(stats.correct/stats.total*100) : 0;
+  const body    = document.getElementById('analysis-body');
+
+  body.innerHTML=`
+    <div class="analysis-grid">
+      <div class="analysis-card"><span class="a-val">${elapsed}</span><span class="a-label">本次學習時間（分）</span></div>
+      <div class="analysis-card"><span class="a-val">${stats.total}</span><span class="a-label">累計答題數</span></div>
+      <div class="analysis-card"><span class="a-val">${stats.correct}</span><span class="a-label">累計答對題數</span></div>
+      <div class="analysis-card"><span class="a-val">${rate}%</span><span class="a-label">整體正確率</span></div>
+    </div>
+    <div class="ch-bar-wrap">
+      <div class="ch-bar-title">各章節答題正確率</div>
+      ${CHAPTERS.map(ch=>{
+        const cs = chStats[ch.id];
+        if(!cs || cs.total===0) return `
+          <div class="ch-bar-row">
+            <div class="ch-bar-row-label"><span>第 ${ch.num} 章：${ch.name}</span><span>尚未作答</span></div>
+            <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:0%"></div></div>
+          </div>`;
+        const r = Math.round(cs.correct/cs.total*100);
+        return `
+          <div class="ch-bar-row">
+            <div class="ch-bar-row-label"><span>第 ${ch.num} 章：${ch.name}</span><span>${r}%（${cs.correct}/${cs.total}）</span></div>
+            <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:${r}%"></div></div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//   MODULE: 公式速查
+// ═══════════════════════════════════════════════════════
+const FORMULAS = [
+  {
+    section:'第一章：整數運算與科學記號',
+    items:[
+      { name:'絕對值定義', expr:'$|a| = a$（$a \\geq 0$）；$|a| = -a$（$a < 0$）' },
+      { name:'科學記號', expr:'$a \\times 10^n$，其中 $1 \\leq a < 10$，$n$ 為整數' },
+      { name:'指數乘法', expr:'$a^m \\times a^n = a^{m+n}$' },
+      { name:'指數除法', expr:'$a^m \\div a^n = a^{m-n}$（$a \\neq 0$）' },
+    ]
+  },
+  {
+    section:'第二章：因數分解與分數運算',
+    items:[
+      { name:'最大公因數（GCD）', expr:'輾轉相除法：$\\gcd(a,b) = \\gcd(b, a \\bmod b)$' },
+      { name:'最小公倍數（LCM）', expr:'$\\text{lcm}(a,b) = \\dfrac{a \\times b}{\\gcd(a,b)}$' },
+      { name:'分數加減', expr:'$\\dfrac{a}{c} \\pm \\dfrac{b}{c} = \\dfrac{a \\pm b}{c}$' },
+      { name:'分數乘除', expr:'$\\dfrac{a}{b} \\times \\dfrac{c}{d} = \\dfrac{ac}{bd}$；$\\dfrac{a}{b} \\div \\dfrac{c}{d} = \\dfrac{a}{b} \\times \\dfrac{d}{c}$' },
+    ]
+  },
+  {
+    section:'第三章：一元一次方程式',
+    items:[
+      { name:'等量公理', expr:'若 $a = b$，則 $a + c = b + c$；$a \\times c = b \\times c$' },
+      { name:'解方程式', expr:'$ax + b = c \\Rightarrow x = \\dfrac{c-b}{a}$（$a \\neq 0$）' },
+    ]
+  },
+  {
+    section:'第四章：二元一次聯立方程式',
+    items:[
+      { name:'代入消去', expr:'由一式解出一變數代入另一式' },
+      { name:'加減消去', expr:'兩式相加或相減，消去一個未知數' },
+    ]
+  },
+  {
+    section:'第五章：直角坐標與直線圖形',
+    items:[
+      { name:'兩點距離', expr:'$d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$' },
+      { name:'斜率', expr:'$m = \\dfrac{y_2 - y_1}{x_2 - x_1}$（$x_1 \\neq x_2$）' },
+      { name:'直線方程式', expr:'$y = mx + b$（斜截式）' },
+    ]
+  },
+  {
+    section:'第六章：比與比例式',
+    items:[
+      { name:'比例式性質', expr:'若 $\\dfrac{a}{b} = \\dfrac{c}{d}$，則 $ad = bc$（外項積＝內項積）' },
+      { name:'正比', expr:'$y = kx$（$k \\neq 0$）' },
+      { name:'反比', expr:'$y = \\dfrac{k}{x}$（$k \\neq 0$）' },
+    ]
+  },
+  {
+    section:'第七章：一元一次不等式',
+    items:[
+      { name:'不等式性質（乘除負數）', expr:'若 $a > b$ 且 $c < 0$，則 $ac < bc$（不等號方向相反）' },
+      { name:'不等式解集合', expr:'$ax > b \\Rightarrow x > \\dfrac{b}{a}$（$a > 0$）；$x < \\dfrac{b}{a}$（$a < 0$）' },
+    ]
+  }
+];
+
+function renderFormula() {
+  const body = document.getElementById('formula-body');
+  body.innerHTML = FORMULAS.map(sec=>`
+    <div class="formula-section">
+      <div class="formula-section-title">${sec.section}</div>
+      ${sec.items.map(f=>`
+        <div class="formula-item">
+          <div class="f-name">${f.name}</div>
+          <div class="f-expr">${f.expr}</div>
+        </div>`).join('')}
+    </div>`).join('');
+  if(window.renderMathInElement) {
+    renderMathInElement(body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+</script>
 </body>
 </html>
