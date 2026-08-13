@@ -800,57 +800,141 @@ const APP = {
 };
 
 // ─── Data: Chapters ──────────────────────────────────
-const CHAPTERS = [
-  { id:'ch1', num:'1', name:'整數運算與科學記號',   sub:'正負整數、絕對值、科學記號' },
-  { id:'ch2', num:'2', name:'因數分解與分數運算',   sub:'最大公因數、最小公倍數、分數四則' },
-  { id:'ch3', num:'3', name:'一元一次方程式',       sub:'等量公理、移項法則、應用題' },
-  { id:'ch4', num:'4', name:'二元一次聯立方程式',   sub:'代入法、加減消去法' },
-  { id:'ch5', num:'5', name:'直角坐標與二元一次方程式的圖形', sub:'坐標系、直線方程式、斜率' },
-  { id:'ch6', num:'6', name:'比與比例式',           sub:'比值、正比、反比、比例式應用' },
-  { id:'ch7', num:'7', name:'一元一次不等式',       sub:'不等式性質、解題與數線' }
-];
-
-// ─── Data: Video bank ────────────────────────────────
-// ytId: YouTube 影片 ID（點擊後以 window.open 開啟 youtube.com/watch）
-// junyiUrl: 均一平台直達連結（備用，點擊均一按鈕時使用）
-const VIDEOS = {
-  ch1:[
-    { title:'整數的加法',           meta:'均一教育平台・第一章', ytId:'La5GFS8h-TI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a1' },
-    { title:'整數四則運算',         meta:'均一教育平台・第一章', ytId:'XTr4zYOmsoY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a2' },
-    { title:'乘方的意義與基本計算', meta:'均一教育平台・第一章', ytId:'l3t2OJNKJoE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a3' },
+// ─── 各年級章節（以 grade 為 key）────────────────────
+const ALL_CHAPTERS = {
+  '7': [
+    { id:'ch1', num:'1', name:'整數運算與科學記號',   sub:'正負整數、絕對值、科學記號' },
+    { id:'ch2', num:'2', name:'因數分解與分數運算',   sub:'最大公因數、最小公倍數、分數四則' },
+    { id:'ch3', num:'3', name:'一元一次方程式',       sub:'等量公理、移項法則、應用題' },
+    { id:'ch4', num:'4', name:'二元一次聯立方程式',   sub:'代入法、加減消去法' },
+    { id:'ch5', num:'5', name:'直角坐標與二元一次方程式的圖形', sub:'坐標系、直線方程式、斜率' },
+    { id:'ch6', num:'6', name:'比與比例式',           sub:'比值、正比、反比、比例式應用' },
+    { id:'ch7', num:'7', name:'一元一次不等式',       sub:'不等式性質、解題與數線' }
   ],
-  ch2:[
-    { title:'質數與合數',             meta:'均一教育平台・第二章', ytId:'iIW_E9Ws618', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b1' },
-    { title:'質因數分解與標準分解式', meta:'均一教育平台・第二章', ytId:'OL1XgBcff1M', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b2' },
+  '8': [
+    { id:'ch1', num:'1', name:'乘法公式與多項式',     sub:'展開、整理多項式、乘法公式' },
+    { id:'ch2', num:'2', name:'平方根與畢氏定理',     sub:'根號運算、畢氏定理與應用' },
+    { id:'ch3', num:'3', name:'因式分解',             sub:'提公因數、十字交乘、完全平方' },
+    { id:'ch4', num:'4', name:'一元二次方程式',       sub:'因式分解法、公式解、判別式' },
+    { id:'ch5', num:'5', name:'等差數列與等差級數',   sub:'首項、公差、前 n 項和' },
+    { id:'ch6', num:'6', name:'幾何圖形與尺規作圖',  sub:'基本作圖、垂直平分、角平分線' }
   ],
-  ch3:[
-    { title:'以符號列代數式',             meta:'均一教育平台・第三章', ytId:'kC3ISg08IeI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c1' },
-    { title:'應用問題與一元一次方程式',   meta:'均一教育平台・第三章', ytId:'OJX2OMCc9_g', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c2' },
-  ],
-  ch4:[
-    { title:'二元一次方程式',           meta:'均一教育平台・第四章', ytId:'JVY62fs3pNQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d1' },
-    { title:'聯立方程式：代入消去法',   meta:'均一教育平台・第四章', ytId:'KXkwOWJpILQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d2' },
-    { title:'聯立方程式：加減消去法',   meta:'均一教育平台・第四章', ytId:'ghbOHkBGqLQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d3' },
-  ],
-  ch5:[
-    { title:'直角坐標系',               meta:'均一教育平台・第五章', ytId:'aKN6ZhSl_CE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e1' },
-    { title:'二元一次方程式的圖形',     meta:'均一教育平台・第五章', ytId:'MXV-MRsFLnI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e2' },
-    { title:'斜率的意義',               meta:'均一教育平台・第五章', ytId:'SeMiQHBgLIU', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e3' },
-  ],
-  ch6:[
-    { title:'比與比值',         meta:'均一教育平台・第六章', ytId:'ZAyQKpFvyLs', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f1' },
-    { title:'比例式',           meta:'均一教育平台・第六章', ytId:'6SJGCm_BPXY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f2' },
-    { title:'正比與反比的應用', meta:'均一教育平台・第六章', ytId:'KH1hq_hfbnc', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f3' },
-  ],
-  ch7:[
-    { title:'不等式的基本性質',     meta:'均一教育平台・第七章', ytId:'VcBGxJ-DKME', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g1' },
-    { title:'一元一次不等式的解法', meta:'均一教育平台・第七章', ytId:'eMKRMEfVfBE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g2' },
-    { title:'不等式的應用',         meta:'均一教育平台・第七章', ytId:'8YKAt7tn85o', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g3' },
-  ],
+  '9': [
+    { id:'ch1', num:'1', name:'相似形',               sub:'比例線段、相似三角形、應用' },
+    { id:'ch2', num:'2', name:'圓形',                 sub:'圓心角、圓周角、點線圓關係' },
+    { id:'ch3', num:'3', name:'幾何推理與三角形的三心', sub:'外心、內心、重心與垂心' },
+    { id:'ch4', num:'4', name:'二次函數',             sub:'拋物線、頂點、最大最小值' },
+    { id:'ch5', num:'5', name:'統計與機率',           sub:'機率概念、組合計數、樹狀圖' },
+    { id:'ch6', num:'6', name:'三維幾何圖形',         sub:'角柱、圓柱、表面積與體積' }
+  ]
 };
+// 執行期動態指向當前年級
+let CHAPTERS = ALL_CHAPTERS['7'];
+
+// ─── Data: Video bank（按年級索引）────────────────────
+const ALL_VIDEOS = {
+  '7': {
+    ch1:[
+      { title:'整數的加法',           meta:'均一教育平台・第一章', ytId:'La5GFS8h-TI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a1' },
+      { title:'整數四則運算',         meta:'均一教育平台・第一章', ytId:'XTr4zYOmsoY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a2' },
+      { title:'乘方的意義與基本計算', meta:'均一教育平台・第一章', ytId:'l3t2OJNKJoE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-a/j-m7s-a3' },
+    ],
+    ch2:[
+      { title:'質數與合數',             meta:'均一教育平台・第二章', ytId:'iIW_E9Ws618', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b1' },
+      { title:'質因數分解與標準分解式', meta:'均一教育平台・第二章', ytId:'OL1XgBcff1M', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-b/j-m7s-b2' },
+    ],
+    ch3:[
+      { title:'以符號列代數式',             meta:'均一教育平台・第三章', ytId:'kC3ISg08IeI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c1' },
+      { title:'應用問題與一元一次方程式',   meta:'均一教育平台・第三章', ytId:'OJX2OMCc9_g', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-c/j-m7s-c2' },
+    ],
+    ch4:[
+      { title:'二元一次方程式',         meta:'均一教育平台・第四章', ytId:'JVY62fs3pNQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d1' },
+      { title:'聯立方程式：代入消去法', meta:'均一教育平台・第四章', ytId:'KXkwOWJpILQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d2' },
+      { title:'聯立方程式：加減消去法', meta:'均一教育平台・第四章', ytId:'ghbOHkBGqLQ', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-d/j-m7s-d3' },
+    ],
+    ch5:[
+      { title:'直角坐標系',             meta:'均一教育平台・第五章', ytId:'aKN6ZhSl_CE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e1' },
+      { title:'二元一次方程式的圖形',   meta:'均一教育平台・第五章', ytId:'MXV-MRsFLnI', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e2' },
+      { title:'斜率的意義',             meta:'均一教育平台・第五章', ytId:'SeMiQHBgLIU', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-e/j-m7s-e3' },
+    ],
+    ch6:[
+      { title:'比與比值',         meta:'均一教育平台・第六章', ytId:'ZAyQKpFvyLs', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f1' },
+      { title:'比例式',           meta:'均一教育平台・第六章', ytId:'6SJGCm_BPXY', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f2' },
+      { title:'正比與反比的應用', meta:'均一教育平台・第六章', ytId:'KH1hq_hfbnc', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-f/j-m7s-f3' },
+    ],
+    ch7:[
+      { title:'不等式的基本性質',     meta:'均一教育平台・第七章', ytId:'VcBGxJ-DKME', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g1' },
+      { title:'一元一次不等式的解法', meta:'均一教育平台・第七章', ytId:'eMKRMEfVfBE', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g2' },
+      { title:'不等式的應用',         meta:'均一教育平台・第七章', ytId:'8YKAt7tn85o', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m7s/j-m7s-g/j-m7s-g3' },
+    ],
+  },
+  '8': {
+    ch1:[
+      { title:'多項式的加減法',   meta:'均一教育平台・第一章', ytId:'placeholder_8_1_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'乘法公式（和差）', meta:'均一教育平台・第一章', ytId:'placeholder_8_1_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'多項式的除法',     meta:'均一教育平台・第一章', ytId:'placeholder_8_1_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+    ],
+    ch2:[
+      { title:'平方根的概念',   meta:'均一教育平台・第二章', ytId:'placeholder_8_2_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'根式的運算',     meta:'均一教育平台・第二章', ytId:'placeholder_8_2_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'畢氏定理與應用', meta:'均一教育平台・第二章', ytId:'placeholder_8_2_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+    ],
+    ch3:[
+      { title:'提公因數法',     meta:'均一教育平台・第三章', ytId:'placeholder_8_3_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'十字交乘法',     meta:'均一教育平台・第三章', ytId:'placeholder_8_3_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'完全平方公式分解', meta:'均一教育平台・第三章', ytId:'placeholder_8_3_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+    ],
+    ch4:[
+      { title:'因式分解法解方程式', meta:'均一教育平台・第四章', ytId:'placeholder_8_4_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'公式解與判別式',     meta:'均一教育平台・第四章', ytId:'placeholder_8_4_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'一元二次方程式應用', meta:'均一教育平台・第四章', ytId:'placeholder_8_4_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+    ],
+    ch5:[
+      { title:'等差數列公式',     meta:'均一教育平台・第五章', ytId:'placeholder_8_5_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'等差級數求和',     meta:'均一教育平台・第五章', ytId:'placeholder_8_5_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+    ],
+    ch6:[
+      { title:'垂直平分線作圖', meta:'均一教育平台・第六章', ytId:'placeholder_8_6_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+      { title:'角平分線作圖',   meta:'均一教育平台・第六章', ytId:'placeholder_8_6_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m8s' },
+    ],
+  },
+  '9': {
+    ch1:[
+      { title:'比例線段',           meta:'均一教育平台・第一章', ytId:'placeholder_9_1_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'相似三角形的條件',   meta:'均一教育平台・第一章', ytId:'placeholder_9_1_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'相似形的應用',       meta:'均一教育平台・第一章', ytId:'placeholder_9_1_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+    ],
+    ch2:[
+      { title:'弧長與扇形面積',       meta:'均一教育平台・第二章', ytId:'placeholder_9_2_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'圓心角與圓周角',       meta:'均一教育平台・第二章', ytId:'placeholder_9_2_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'點、線、圓的關係',     meta:'均一教育平台・第二章', ytId:'placeholder_9_2_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+    ],
+    ch3:[
+      { title:'三角形的外心與內心', meta:'均一教育平台・第三章', ytId:'placeholder_9_3_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'三角形的重心',       meta:'均一教育平台・第三章', ytId:'placeholder_9_3_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+    ],
+    ch4:[
+      { title:'二次函數的圖形',   meta:'均一教育平台・第四章', ytId:'placeholder_9_4_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'頂點與最大最小值', meta:'均一教育平台・第四章', ytId:'placeholder_9_4_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'二次函數的應用',   meta:'均一教育平台・第四章', ytId:'placeholder_9_4_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+    ],
+    ch5:[
+      { title:'機率的概念',     meta:'均一教育平台・第五章', ytId:'placeholder_9_5_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'樹狀圖與列舉法', meta:'均一教育平台・第五章', ytId:'placeholder_9_5_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'統計圖表解讀',   meta:'均一教育平台・第五章', ytId:'placeholder_9_5_3', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+    ],
+    ch6:[
+      { title:'角柱與圓柱的表面積', meta:'均一教育平台・第六章', ytId:'placeholder_9_6_1', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+      { title:'角柱與圓柱的體積',   meta:'均一教育平台・第六章', ytId:'placeholder_9_6_2', junyiUrl:'https://www.junyiacademy.org/junyi-math/j-m9s' },
+    ],
+  }
+};
+// 執行期動態指向當前年級
+let VIDEOS = ALL_VIDEOS['7'];
 
 // ─── Data: Question bank ─────────────────────────────
 const QUESTION_BANK = {
+  '7': {
   ch1: {
     初級: [
       { question:'計算 $(-3) + (-5) = $？', options:['A. -8','B. -2','C. 8','D. 2'], answer:'A', steps:'負數相加：$(-3)+(-5) = -(3+5) = -8$，答案為 $-8$。' },
@@ -901,18 +985,20 @@ const QUESTION_BANK = {
       { question:'$(-2)^3 \\times (-3)^2 + (-1)^5 \\times 2^4 = $？', options:['A. -88','B. -56','C. -88','D. 56'], answer:'B', steps:'$(-8)\\times9 + (-1)\\times16 = -72 + (-16) = -88$… 選 A/C（$-88$）。（修正：答案為 A）' },
     ]
   }
+  } // end grade '7'
 };
 
-// 其餘章節使用通用題目產生器
+// 通用 AI 題目產生器（無內建題庫時使用）
 function generateQuestions(chapterId, difficulty) {
-  const bank = QUESTION_BANK[chapterId]?.[difficulty];
+  const gradeBank = QUESTION_BANK[APP.grade] || {};
+  const bank = gradeBank[chapterId]?.[difficulty];
   if (bank) return [...bank];
   const ch = CHAPTERS.find(c=>c.id===chapterId);
   return Array.from({length:10},(_,i)=>({
-    question: `【${ch?.name}】${difficulty}難度 第 ${i+1} 題：求解下列算式（AI 模擬題目）`,
+    question: `【${APP.gradeLabel}・${ch?.name}】${difficulty}難度 第 ${i+1} 題（AI 模擬）`,
     options:['A. 選項一','B. 選項二','C. 選項三','D. 選項四'],
     answer: ['A','B','C','D'][i%4],
-    steps: `本題為「${ch?.name}」的 ${difficulty} 難度題目。\n解題步驟：\n1. 識別題型\n2. 列出算式\n3. 逐步計算\n4. 驗算結果`
+    steps: `本題為「${APP.gradeLabel}・${ch?.name}」的 ${difficulty} 難度題目。\n解題步驟：\n1. 識別題型\n2. 套用公式\n3. 逐步計算\n4. 驗算結果`
   }));
 }
 
@@ -1000,12 +1086,19 @@ document.querySelectorAll('.btn-grade').forEach(btn=>{
 
 // ─── Dashboard setup ─────────────────────────────────
 function setupDashboard() {
+  // 切換至當前年級的資料集
+  CHAPTERS = ALL_CHAPTERS[APP.grade] || ALL_CHAPTERS['7'];
+  VIDEOS   = ALL_VIDEOS[APP.grade]   || ALL_VIDEOS['7'];
+
   updateDateTime();
   updateDashboardStats();
   document.getElementById('db-welcome-title').textContent = `${APP.gradeLabel} 數學學習中心`;
-  setInterval(()=>{
-    updateDashboardStats();
-  }, 30000);
+
+  // Hero badge 依年級換圖示
+  const badges = { '7':'📐', '8':'📏', '9':'🎯' };
+  document.querySelector('.db-hero-badge').textContent = badges[APP.grade] || '📐';
+
+  setInterval(()=>{ updateDashboardStats(); }, 30000);
 }
 document.getElementById('btn-back-grade').addEventListener('click',()=> goScreen('s-grade'));
 
@@ -1320,67 +1413,115 @@ function renderAnalysis() {
 // ═══════════════════════════════════════════════════════
 //   MODULE: 公式速查
 // ═══════════════════════════════════════════════════════
-const FORMULAS = [
-  {
-    section:'第一章：整數運算與科學記號',
-    items:[
+const ALL_FORMULAS = {
+  '7': [
+    { section:'第一章：整數運算與科學記號', items:[
       { name:'絕對值定義', expr:'$|a| = a$（$a \\geq 0$）；$|a| = -a$（$a < 0$）' },
-      { name:'科學記號', expr:'$a \\times 10^n$，其中 $1 \\leq a < 10$，$n$ 為整數' },
-      { name:'指數乘法', expr:'$a^m \\times a^n = a^{m+n}$' },
-      { name:'指數除法', expr:'$a^m \\div a^n = a^{m-n}$（$a \\neq 0$）' },
-    ]
-  },
-  {
-    section:'第二章：因數分解與分數運算',
-    items:[
+      { name:'科學記號',   expr:'$a \\times 10^n$，其中 $1 \\leq a < 10$，$n$ 為整數' },
+      { name:'指數乘法',   expr:'$a^m \\times a^n = a^{m+n}$' },
+      { name:'指數除法',   expr:'$a^m \\div a^n = a^{m-n}$（$a \\neq 0$）' },
+    ]},
+    { section:'第二章：因數分解與分數運算', items:[
       { name:'最大公因數（GCD）', expr:'輾轉相除法：$\\gcd(a,b) = \\gcd(b, a \\bmod b)$' },
       { name:'最小公倍數（LCM）', expr:'$\\text{lcm}(a,b) = \\dfrac{a \\times b}{\\gcd(a,b)}$' },
       { name:'分數加減', expr:'$\\dfrac{a}{c} \\pm \\dfrac{b}{c} = \\dfrac{a \\pm b}{c}$' },
       { name:'分數乘除', expr:'$\\dfrac{a}{b} \\times \\dfrac{c}{d} = \\dfrac{ac}{bd}$；$\\dfrac{a}{b} \\div \\dfrac{c}{d} = \\dfrac{a}{b} \\times \\dfrac{d}{c}$' },
-    ]
-  },
-  {
-    section:'第三章：一元一次方程式',
-    items:[
+    ]},
+    { section:'第三章：一元一次方程式', items:[
       { name:'等量公理', expr:'若 $a = b$，則 $a + c = b + c$；$a \\times c = b \\times c$' },
       { name:'解方程式', expr:'$ax + b = c \\Rightarrow x = \\dfrac{c-b}{a}$（$a \\neq 0$）' },
-    ]
-  },
-  {
-    section:'第四章：二元一次聯立方程式',
-    items:[
+    ]},
+    { section:'第四章：二元一次聯立方程式', items:[
       { name:'代入消去', expr:'由一式解出一變數代入另一式' },
       { name:'加減消去', expr:'兩式相加或相減，消去一個未知數' },
-    ]
-  },
-  {
-    section:'第五章：直角坐標與直線圖形',
-    items:[
+    ]},
+    { section:'第五章：直角坐標與直線圖形', items:[
       { name:'兩點距離', expr:'$d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$' },
-      { name:'斜率', expr:'$m = \\dfrac{y_2 - y_1}{x_2 - x_1}$（$x_1 \\neq x_2$）' },
+      { name:'斜率',     expr:'$m = \\dfrac{y_2 - y_1}{x_2 - x_1}$（$x_1 \\neq x_2$）' },
       { name:'直線方程式', expr:'$y = mx + b$（斜截式）' },
-    ]
-  },
-  {
-    section:'第六章：比與比例式',
-    items:[
-      { name:'比例式性質', expr:'若 $\\dfrac{a}{b} = \\dfrac{c}{d}$，則 $ad = bc$（外項積＝內項積）' },
+    ]},
+    { section:'第六章：比與比例式', items:[
+      { name:'比例式性質', expr:'若 $\\dfrac{a}{b} = \\dfrac{c}{d}$，則 $ad = bc$' },
       { name:'正比', expr:'$y = kx$（$k \\neq 0$）' },
       { name:'反比', expr:'$y = \\dfrac{k}{x}$（$k \\neq 0$）' },
-    ]
-  },
-  {
-    section:'第七章：一元一次不等式',
-    items:[
-      { name:'不等式性質（乘除負數）', expr:'若 $a > b$ 且 $c < 0$，則 $ac < bc$（不等號方向相反）' },
+    ]},
+    { section:'第七章：一元一次不等式', items:[
+      { name:'不等式（乘除負數）', expr:'若 $a > b$ 且 $c < 0$，則 $ac < bc$' },
       { name:'不等式解集合', expr:'$ax > b \\Rightarrow x > \\dfrac{b}{a}$（$a > 0$）；$x < \\dfrac{b}{a}$（$a < 0$）' },
-    ]
-  }
-];
+    ]},
+  ],
+  '8': [
+    { section:'第一章：乘法公式與多項式', items:[
+      { name:'和差積',     expr:'$(a+b)(a-b) = a^2 - b^2$' },
+      { name:'完全平方和', expr:'$(a+b)^2 = a^2 + 2ab + b^2$' },
+      { name:'完全平方差', expr:'$(a-b)^2 = a^2 - 2ab + b^2$' },
+      { name:'多項式次數', expr:'最高次項的次數為多項式的次數' },
+    ]},
+    { section:'第二章：平方根與畢氏定理', items:[
+      { name:'平方根定義', expr:'若 $x^2 = a$（$a \\geq 0$），則 $x = \\pm\\sqrt{a}$' },
+      { name:'根式乘法',   expr:'$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$（$a,b \\geq 0$）' },
+      { name:'畢氏定理',   expr:'直角三角形：$a^2 + b^2 = c^2$（$c$ 為斜邊）' },
+    ]},
+    { section:'第三章：因式分解', items:[
+      { name:'提公因數',   expr:'$ma + mb = m(a+b)$' },
+      { name:'完全平方式', expr:'$a^2 \\pm 2ab + b^2 = (a \\pm b)^2$' },
+      { name:'平方差',     expr:'$a^2 - b^2 = (a+b)(a-b)$' },
+    ]},
+    { section:'第四章：一元二次方程式', items:[
+      { name:'公式解（求根公式）', expr:'$x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$' },
+      { name:'判別式',             expr:'$\\Delta = b^2 - 4ac$；$\\Delta > 0$：兩相異實根；$\\Delta = 0$：兩相等實根；$\\Delta < 0$：無實根' },
+      { name:'根與係數關係',       expr:'$x_1 + x_2 = -\\dfrac{b}{a}$；$x_1 \\cdot x_2 = \\dfrac{c}{a}$' },
+    ]},
+    { section:'第五章：等差數列與等差級數', items:[
+      { name:'第 $n$ 項公式', expr:'$a_n = a_1 + (n-1)d$' },
+      { name:'前 $n$ 項和',   expr:'$S_n = \\dfrac{n(a_1 + a_n)}{2} = \\dfrac{n[2a_1+(n-1)d]}{2}$' },
+    ]},
+    { section:'第六章：幾何圖形與尺規作圖', items:[
+      { name:'垂直平分線', expr:'到線段兩端點等距的點軌跡' },
+      { name:'角平分線',   expr:'到角兩邊等距的點軌跡' },
+      { name:'三角形外角', expr:'外角 $=$ 兩非相鄰內角之和' },
+    ]},
+  ],
+  '9': [
+    { section:'第一章：相似形', items:[
+      { name:'相似比',           expr:'對應邊之比相等，對應角相等' },
+      { name:'面積比',           expr:'面積比 $= $ 相似比的平方' },
+      { name:'AA 相似',         expr:'兩角對應相等，則兩三角形相似' },
+    ]},
+    { section:'第二章：圓形', items:[
+      { name:'弧長公式',   expr:'$L = \\dfrac{\\theta}{360°} \\times 2\\pi r$' },
+      { name:'扇形面積',   expr:'$A = \\dfrac{\\theta}{360°} \\times \\pi r^2$' },
+      { name:'圓周角定理', expr:'圓周角 $=$ 圓心角 $\\div 2$' },
+    ]},
+    { section:'第三章：三角形的三心', items:[
+      { name:'外心', expr:'三邊垂直平分線的交點；到三頂點等距' },
+      { name:'內心', expr:'三角平分線的交點；到三邊等距' },
+      { name:'重心', expr:'三中線的交點；將中線分為 $2:1$' },
+    ]},
+    { section:'第四章：二次函數', items:[
+      { name:'標準式',         expr:'$y = a(x-h)^2 + k$，頂點 $(h, k)$' },
+      { name:'一般式',         expr:'$y = ax^2 + bx + c$' },
+      { name:'對稱軸',         expr:'$x = -\\dfrac{b}{2a}$' },
+      { name:'頂點 x 座標',   expr:'$x = -\\dfrac{b}{2a}$，頂點 $y = c - \\dfrac{b^2}{4a}$' },
+    ]},
+    { section:'第五章：統計與機率', items:[
+      { name:'古典機率',   expr:'$P(A) = \\dfrac{\\text{事件 A 的樣本點數}}{\\text{樣本空間總數}}$' },
+      { name:'加法原理',   expr:'$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$' },
+      { name:'平均數',     expr:'$\\bar{x} = \\dfrac{\\sum x_i}{n}$' },
+    ]},
+    { section:'第六章：三維幾何圖形', items:[
+      { name:'角柱體積', expr:'$V = \\text{底面積} \\times \\text{高}$' },
+      { name:'圓柱體積', expr:'$V = \\pi r^2 h$' },
+      { name:'圓柱側面積', expr:'$A_{側} = 2\\pi r h$' },
+      { name:'球體積',   expr:'$V = \\dfrac{4}{3}\\pi r^3$' },
+    ]},
+  ]
+};
 
 function renderFormula() {
-  const body = document.getElementById('formula-body');
-  body.innerHTML = FORMULAS.map(sec=>`
+  const body    = document.getElementById('formula-body');
+  const formulas = ALL_FORMULAS[APP.grade] || ALL_FORMULAS['7'];
+  body.innerHTML = formulas.map(sec=>`
     <div class="formula-section">
       <div class="formula-section-title">${sec.section}</div>
       ${sec.items.map(f=>`
