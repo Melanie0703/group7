@@ -1,0 +1,11 @@
+{
+  "name": "edumath-ai",
+  "version": "1.0.0",
+  "description": "EduMath AI — 國中數學 AI 家教 Web App",
+  "scripts": {
+    "start": "npx serve . --cors --listen 3000",
+    "dev":   "npx serve . --cors --listen 3000 --open"
+  },
+  "keywords": ["math", "education", "ai"],
+  "license": "MIT"
+}
