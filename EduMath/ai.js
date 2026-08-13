@@ -501,3 +501,208 @@ function getQuizAIAnalysis(results, unit) {
 
   return msg;
 }
+ feature/昕旂-技術開發
+
+// ============================================================
+// AI 動態出題系統 — 嚴格課綱 + 歷史去重
+// ============================================================
+
+/**
+ * 難度中文標籤對應表
+ */
+const DIFFICULTY_LABEL = {
+  easy: '初級',
+  medium: '中級',
+  hard: '高級',
+  mixed: '綜合',
+};
+
+/**
+ * 建構 AI 出題 System Prompt。
+ * @param {string} unitId       - 單元 ID（如 'similarity'）
+ * @param {string} unitName     - 單元名稱（如 '相似形'）
+ * @param {string} grade        - 年級字串（如 '九年級'）
+ * @param {string} difficulty   - 難度 key（easy/medium/hard/mixed）
+ * @param {number} count        - 出題數量
+ * @param {Array}  historyItems - Storage.getQuizHistory() 的最近紀錄（摘要陣列）
+ * @returns {string} 完整 prompt 字串
+ */
+function generateQuizPrompt(unitId, unitName, grade, difficulty, count, historyItems = []) {
+  const randomSeed = Math.random().toString(36).substring(2, 9);
+  const timestamp = Date.now();
+  const diffLabel = DIFFICULTY_LABEL[difficulty] || difficulty;
+
+  // 依難度組合說明
+  let diffDetail = '';
+  if (difficulty === 'mixed') {
+    const easy = Math.round(count * 0.625);
+    const med  = Math.round(count * 0.25);
+    const hard = count - easy - med;
+    diffDetail = `【綜合】：包含 ${easy} 題初級、${med} 題中級、${hard} 題高級的混合試卷。`;
+  } else {
+    const detailMap = {
+      easy:   '【初級】：單一觀念直接計算，基礎觀念辨析。',
+      medium: '【中級】：需 2～3 步驟計算，包含常見應用題型與變體。',
+      hard:   '【高級】：跨觀念綜合思考，邏輯推理與較複雜的代數/幾何變化題。',
+    };
+    diffDetail = detailMap[difficulty] || '';
+  }
+
+  // 取最近 20 筆已做過題目的摘要，傳給 AI 避免重複
+  const recentHistory = historyItems.slice(0, 20).map(q => ({
+    question: q.question,
+    unit: q.unit,
+  }));
+
+  return `你是一位專業且嚴格的臺灣國中數學命題老師。
+請針對【${grade}】【${unitName}】章節，生成 ${count} 道【${diffLabel}】難度的單選題。
+
+【命題嚴格規範】：
+1. **絕不超綱**：題目必須 100% 符合臺灣 108 課綱中【${grade} - ${unitName}】的觀念與能力指標。切勿使用更高年級的公式或概念（例如：七年級不可出現根號或勾股定理；八年級不可出現圓周角等）。
+2. **難度精準度**：
+   - 【初級】：單一觀念直接計算，基礎觀念辨析。
+   - 【中級】：需 2～3 步驟計算，包含常見應用題型與變體。
+   - 【高級】：跨觀念綜合思考，邏輯推理與較複雜的代數/幾何變化題。
+   - ${diffDetail}
+3. **隨機與多樣性（亂數標記：${randomSeed}_${timestamp}）**：
+   - 每次生成的題目情境、數字與問法必須全新穎，避免重複。
+   - 請避開以下學生最近做過的題型與題目（即使數字不同也要避開相同出題方向）：
+     ${JSON.stringify(recentHistory)}
+
+【輸出 JSON 格式需求】：
+請嚴格僅輸出 JSON 格式（不要包含任何 markdown 標籤、\`\`\`json 包裝或額外文字）：
+{
+  "questions": [
+    {
+      "id": "${unitId}_ai_1",
+      "question": "題目描述...",
+      "options": ["(A) 選項1", "(B) 選項2", "(C) 選項3", "(D) 選項4"],
+      "answer": "(A)",
+      "explanation": "詳細步驟拆解與觀念說明...",
+      "concept": "對應觀念名稱",
+      "unit": "${unitName}",
+      "difficulty": "${difficulty}"
+    }
+  ]
+}`;
+}
+
+/**
+ * AI 動態出題：呼叫後端 Proxy 向 LLM 請求出題，失敗時自動 fallback 到靜態題庫。
+ * @param {string} unitId     - 單元 ID
+ * @param {string} mode       - 難度模式（easy/medium/hard/mixed）
+ * @param {number} total      - 題目數量
+ * @returns {Promise<Array>}  - 題目陣列
+ */
+async function buildAIQuizQuestions(unitId, mode, total) {
+  // 取得單元資訊
+  const unit = (typeof UNITS !== 'undefined') ? UNITS.find(u => u.id === unitId) : null;
+  const unitName = unit ? unit.name : unitId;
+
+  // 年級對應（依單元推斷）
+  const gradeMap = {
+    similarity: '九年級', circle: '九年級', geometry: '八年級',
+    coordinate: '八年級', quadratic: '九年級', statistics: '九年級',
+  };
+  const grade = gradeMap[unitId] || '國中';
+
+  // 讀取歷史題目紀錄（去重用）
+  const historyItems = (typeof Storage !== 'undefined') ? Storage.getQuizHistory() : [];
+
+  // 建構 prompt
+  const prompt = generateQuizPrompt(unitId, unitName, grade, mode, total, historyItems);
+
+  // 嘗試呼叫 AI API（需後端 Proxy 支援）
+  const AI_PROXY_URL = (typeof window !== 'undefined' && window.EDUMATH_AI_URL) || null;
+
+  if (AI_PROXY_URL) {
+    try {
+      const res = await fetch(AI_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, unitId, mode, total }),
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      const questions = (data.questions || []).map((q, i) => ({
+        ...q,
+        id: q.id || `${unitId}_ai_${Date.now()}_${i}`,
+        _diff: q.difficulty || mode,
+        _aiGenerated: true,
+      }));
+
+      if (questions.length > 0) {
+        return questions;
+      }
+      throw new Error('AI 回傳空題目');
+    } catch (err) {
+      console.warn('[EduMath] AI 出題失敗，使用靜態題庫 fallback:', err.message);
+    }
+  }
+
+  // Fallback：使用靜態題庫（原本的 buildQuizQuestions 邏輯）
+  return _buildStaticQuizQuestions(unitId, mode, total);
+}
+
+/**
+ * 靜態題庫出題（原 buildQuizQuestions 邏輯，供 fallback 使用）。
+ */
+function _buildStaticQuizQuestions(unitId, mode, total) {
+  if (typeof QUESTION_BANK === 'undefined') return [];
+  const bank = QUESTION_BANK[unitId];
+  if (!bank) return [];
+
+  let pool = [];
+  if (mode === 'mixed') {
+    const easyCount = Math.round(total * 0.625);
+    const medCount  = Math.round(total * 0.25);
+    const hardCount = total - easyCount - medCount;
+    pool = [
+      ..._sampleQuestions(bank.easy   || [], easyCount).map(q => ({ ...q, _diff: 'easy' })),
+      ..._sampleQuestions(bank.medium || [], medCount ).map(q => ({ ...q, _diff: 'medium' })),
+      ..._sampleQuestions(bank.hard   || [], hardCount).map(q => ({ ...q, _diff: 'hard' })),
+    ];
+  } else {
+    const source = bank[mode] || [];
+    pool = _sampleQuestions(source, total).map(q => ({ ...q, _diff: mode }));
+  }
+  return _shuffleQuestions(pool);
+}
+
+/** 去重取樣：優先排除最近做過的題目 */
+function _sampleQuestions(arr, n) {
+  if (arr.length === 0 || n === 0) return [];
+
+  // 取得最近做過題目的 ID 集合（最多 100 筆）
+  const recentIds = new Set(
+    (typeof Storage !== 'undefined' ? Storage.getQuizHistory() : [])
+      .slice(0, 100)
+      .map(q => q.id)
+      .filter(Boolean)
+  );
+
+  // 優先用未做過的題目
+  const fresh   = arr.filter(q => !recentIds.has(q.id));
+  const stale   = arr.filter(q =>  recentIds.has(q.id));
+  const ordered = [..._shuffleQuestions(fresh), ..._shuffleQuestions(stale)];
+
+  // 若總數不足則重複填補
+  const result = [];
+  while (result.length < n) {
+    result.push(...ordered.slice(0, Math.min(n - result.length, ordered.length)));
+  }
+  return result.slice(0, n);
+}
+
+function _shuffleQuestions(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+ main

@@ -257,6 +257,13 @@
         <span class="db-tile-icon" style="background:#ede9fe;color:#7c3aed;">🔣</span>
         <span class="db-tile-label">公式速查</span>
       </button>
+ feature/昕旂-技術開發
+      <button class="db-tile" id="tile-notes" data-module="notes">
+        <span class="db-tile-icon" style="background:#fce7f3;color:#db2777;">📝</span>
+        <span class="db-tile-label">學習筆記</span>
+      </button>
+
+ main
     </div>
   </div>
 
@@ -324,6 +331,10 @@
       <div class="chapter-list" id="quiz-chapters"></div>
     </div>
     <!-- Step B: difficulty -->
+ feature/昕旂-技術開發
+    <!-- Step B: difficulty -->
+
+ main
     <div id="quiz-step-diff" style="display:none;">
       <div class="sub-breadcrumb">
         <button class="crumb-back" id="btn-quiz-back-ch">← 重選章節</button>
@@ -336,9 +347,23 @@
         <button class="diff-btn" data-diff="高級">🔴 高級<span>挑戰題</span></button>
         <button class="diff-btn" data-diff="綜合">🔵 綜合<span>混合難度</span></button>
       </div>
+ feature/昕旂-技術開發
+      <!-- Step B-Loading: AI 出題中 -->
+      <div class="quiz-loading" id="quiz-loading">
+        <div class="quiz-loading-spinner"></div>
+        <p class="quiz-loading-text">✨ AI 正在依課綱為你出題中…</p>
+        <p class="quiz-loading-sub">通常需要 5～15 秒，請稍候</p>
+      </div>
     </div>
     <!-- Step C: answering -->
     <div id="quiz-step-answering" style="display:none;">
+      <!-- 10 題格點導航 -->
+      <div class="quiz-dot-nav" id="quiz-dot-nav"></div>
+
+    </div>
+    <!-- Step C: answering -->
+    <div id="quiz-step-answering" style="display:none;">
+ main
       <div class="quiz-header-bar">
         <span id="quiz-progress-label">題目 1 / 10</span>
         <span id="quiz-ch-diff-label"></span>
@@ -357,6 +382,11 @@
         <div class="result-score-rate" id="result-rate">0%</div>
         <div class="result-score-msg" id="result-msg"></div>
       </div>
+ feature/昕旂-技術開發
+      <!-- 正誤概覽格點 -->
+      <div class="result-summary-row" id="result-summary-row"></div>
+
+ main
       <div id="result-detail"></div>
       <div style="text-align:center;margin-top:24px;">
         <button class="btn-primary" id="btn-quiz-again" style="max-width:240px;">再挑戰一次</button>
@@ -401,6 +431,27 @@
   <div class="sub-body" id="formula-body"></div>
 </div>
 
+ feature/昕旂-技術開發
+<!-- ══════════════════════════════════════════
+     SCREEN 9 — 學習筆記 (placeholder)
+══════════════════════════════════════════ -->
+<div class="screen" id="s-notes">
+  <div class="sub-topbar">
+    <button class="sub-back" onclick="goScreen('s-dashboard')">← 返回</button>
+    <h3>學習筆記</h3>
+    <div></div>
+  </div>
+  <div class="sub-body">
+    <div class="placeholder-box">
+      <div style="font-size:3rem;">📝</div>
+      <h3>學習筆記功能</h3>
+      <p>此功能建置中，敬請期待！</p>
+    </div>
+  </div>
+</div>
+
+
+ main
 <style>
 /* ═══════════════════════════════════════
    Dashboard styles
@@ -436,6 +487,8 @@
   grid-template-columns:repeat(3, 1fr);
   gap:14px;
 }
+ feature/昕旂-技術開發
+
 /* 五宮格：第 4、5 個按鈕置中於第 2 列 */
 .db-grid .db-tile:nth-child(4) { grid-column:1; }
 .db-grid .db-tile:nth-child(5) { grid-column:2; }
@@ -445,6 +498,7 @@
   .db-grid .db-tile:nth-child(5) { grid-column:auto; }
   .db-grid .db-tile:nth-child(5) { grid-column:1/-1; max-width:50%; justify-self:center; }
 }
+ main
 .db-tile {
   display:flex; flex-direction:column; align-items:center; gap:10px;
   padding:20px 12px 18px;
@@ -602,6 +656,58 @@
 .diff-btn span { font-size:.75rem; font-weight:400; color:var(--gray-600); }
 .diff-btn:hover { border-color:var(--primary); background:var(--primary-light); transform:translateY(-2px); }
 
+ feature/昕旂-技術開發
+.diff-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+
+/* ─── Quiz Loading ─── */
+.quiz-loading {
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  gap:16px; padding:60px 20px; text-align:center;
+}
+.quiz-loading.active { display:flex; }
+.quiz-loading-spinner {
+  width:44px; height:44px; border:4px solid var(--gray-200);
+  border-top-color:var(--primary); border-radius:50%;
+  animation:ql-spin .8s linear infinite;
+}
+@keyframes ql-spin { to { transform:rotate(360deg); } }
+.quiz-loading-text { font-size:.95rem; font-weight:600; color:var(--gray-600); }
+.quiz-loading-sub  { font-size:.8rem; color:var(--gray-400); margin-top:-8px; }
+
+/* ─── Quiz Nav Dots (10 題格點導航) ─── */
+.quiz-dot-nav {
+  display:flex; flex-wrap:wrap; gap:7px; justify-content:center;
+  padding:12px 0 14px; margin-bottom:4px;
+}
+.q-dot {
+  width:32px; height:32px; border-radius:8px; border:1.5px solid var(--gray-200);
+  background:var(--white); cursor:pointer; font-size:.78rem; font-weight:700;
+  color:var(--gray-500); display:flex; align-items:center; justify-content:center;
+  transition:border-color .15s,background .15s,color .15s;
+}
+.q-dot:hover              { border-color:var(--primary); color:var(--primary); }
+.q-dot.dot-answered       { background:var(--primary-light); border-color:var(--primary); color:var(--primary); }
+.q-dot.dot-current        { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+/* ─── Result summary row ─── */
+.result-summary-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.rsq-dot {
+  width:34px; height:34px; border-radius:8px; font-size:.78rem; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+}
+.rsq-correct { background:#d1fae5; color:#059669; }
+.rsq-wrong   { background:#fee2e2; color:#ef4444; }
+.rsq-skip    { background:var(--gray-100); color:var(--gray-400); }
+
+/* ─── AI badge ─── */
+.ai-badge {
+  display:inline-flex; align-items:center; gap:4px; font-size:.72rem; font-weight:700;
+  padding:2px 8px; border-radius:100px; background:#ede9fe; color:#7c3aed;
+}
+
+
+
+ main
 .quiz-header-bar {
   display:flex; justify-content:space-between; align-items:center;
   margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--gray-200);
@@ -1101,11 +1207,20 @@ document.getElementById('btn-back-grade').addEventListener('click',()=> goScreen
 document.querySelectorAll('.db-tile').forEach(tile=>{
   tile.addEventListener('click',()=>{
     const m = tile.dataset.module;
+ feature/昕旂-技術開發
+    if (m==='video')    { openVideoModule(); goScreen('s-video'); }
+    else if(m==='quiz') { openQuizModule();  goScreen('s-quiz'); }
+    else if(m==='wrong'){ renderWrongBook(); goScreen('s-wrong'); }
+    else if(m==='analysis'){ renderAnalysis(); goScreen('s-analysis'); }
+    else if(m==='formula') { renderFormula(); goScreen('s-formula'); }
+    else goScreen('s-notes');
+
     if      (m==='video')    { openVideoModule(); goScreen('s-video'); }
     else if (m==='quiz')     { openQuizModule();  goScreen('s-quiz'); }
     else if (m==='wrong')    { renderWrongBook(); goScreen('s-wrong'); }
     else if (m==='analysis') { renderAnalysis();  goScreen('s-analysis'); }
     else if (m==='formula')  { renderFormula();   goScreen('s-formula'); }
+ main
   });
 });
 
@@ -1162,11 +1277,79 @@ function renderVideoList(chId) {
 document.getElementById('btn-video-back-chapter').addEventListener('click',()=>showVideoView('chapter'));
 
 // ═══════════════════════════════════════════════════════
+ feature/昕旂-技術開發
+//   AGNES API — 動態出題服務
+// ═══════════════════════════════════════════════════════
+const AGNES_API_KEY = 'sk-7ZeVcZE5UQNNOHuBVRbuyi88xRMoDqo40eY7iUu3FsBpf4tQ';
+const AGNES_API_URL = 'https://api.openai.com/v1/chat/completions';
+const AGNES_MODEL   = 'gpt-3.5-turbo';
+
+/**
+ * 呼叫 Agnes/OpenAI 相容 API 動態生成 10 道題目。
+ */
+async function generateDynamicQuiz(grade, chapter, difficulty) {
+  const seed = Math.random().toString(36).substring(2, 9);
+  const ts   = Date.now();
+  const hist = APP.getHistory().slice(-20).map(h => h.question);
+
+  const prompt =
+    `你是一位臺灣國中數學老師。請針對【${grade}年級】【${chapter}】章節，` +
+    `動態生成 10 道【${difficulty}】難度的單選題。\n` +
+    `隨機種子: [${seed}_${ts}]（請確保題目全新，切勿重複）。\n\n` +
+    `【出題要求】：\n` +
+    `1. 嚴格符合臺灣國中 ${grade} 年級「${chapter}」課綱，切勿超綱。\n` +
+    `2. 計算結果須為整數或簡單分數。\n` +
+    `3. 每題含 4 個選項（1 個正確答案 + 3 個常見錯誤誘答）。\n` +
+    `4. 避開以下學生近期已做過的題型：${JSON.stringify(hist)}\n\n` +
+    `【回傳格式】（純 JSON，不含 markdown）：\n` +
+    `{"questions":[{"id":1,"question":"...","options":["(A) ...","(B) ...","(C) ...","(D) ..."],"answer":"(A)","explanation":"..."}]}`;
+
+  const resp = await fetch(AGNES_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${AGNES_API_KEY}` },
+    body: JSON.stringify({
+      model: AGNES_MODEL,
+      messages: [
+        { role: 'system', content: '你是一個只會輸出 JSON 格式的臺灣國中數學出題助手。' },
+        { role: 'user',   content: prompt }
+      ],
+      temperature: 0.85
+    }),
+    signal: AbortSignal.timeout(30000)
+  });
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const data  = await resp.json();
+  const raw   = data.choices?.[0]?.message?.content || '';
+  const clean = raw.replace(/```json\s*/gi,'').replace(/```/g,'').trim();
+  const parsed = JSON.parse(clean);
+  return parsed.questions || [];
+}
+
+/**
+ * 正規化題目格式：AI 用 answer:"(A)" + explanation；靜態題庫用 answer:"A" + steps。
+ * 統一輸出 answer:"A"，steps: 解說文字。
+ */
+function normaliseQuestion(q) {
+  const ans  = (q.answer || '').replace(/[()（）]/g, '').trim().toUpperCase();
+  const opts = (q.options || []).map(o =>
+    o.replace(/^\(([A-D])\)\s*/i, '$1. ').replace(/^([A-D])\.\s+/i, '$1. ')
+  );
+  return { ...q, answer: ans, options: opts, steps: q.explanation || q.steps || '' };
+}
+
+// ═══════════════════════════════════════════════════════
+//   MODULE: 隨堂測驗  (Agnes AI 動態出題 + fallback 靜態題庫)
+// ═══════════════════════════════════════════════════════
+function openQuizModule() {
+  showQuizStep('chapter');
+  buildChapterList('quiz-chapters', ch => {
+
 //   MODULE: 隨堂測驗
 // ═══════════════════════════════════════════════════════
 function openQuizModule() {
   showQuizStep('chapter');
   buildChapterList('quiz-chapters', ch=>{
+ main
     QUIZ.chapterId = ch.id;
     document.getElementById('quiz-ch-title').textContent = `第 ${ch.num} 章：${ch.name}`;
     showQuizStep('diff');
@@ -1174,6 +1357,61 @@ function openQuizModule() {
 }
 
 function showQuizStep(step) {
+ feature/昕旂-技術開發
+  document.getElementById('quiz-loading').classList.remove('active');
+  ['chapter','diff','answering','result'].forEach(s => {
+    document.getElementById(`quiz-step-${s}`).style.display = s === step ? 'block' : 'none';
+  });
+}
+
+function showQuizLoading(show) {
+  document.getElementById('quiz-loading').classList.toggle('active', show);
+  document.getElementById('quiz-step-diff').style.display = show ? 'none' : 'block';
+}
+
+document.getElementById('btn-quiz-back-ch').addEventListener('click', () => showQuizStep('chapter'));
+
+// ── 選難度 → 呼叫 Agnes API（失敗則 fallback 靜態題庫）──
+document.querySelectorAll('.diff-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const diff  = btn.dataset.diff;
+    const ch    = CHAPTERS.find(c => c.id === QUIZ.chapterId);
+    const grade = APP.gradeLabel.replace(/（.*）/, '');
+
+    document.querySelectorAll('.diff-btn').forEach(b => b.disabled = true);
+    QUIZ.difficulty = diff;
+    showQuizLoading(true);
+
+    let questions = [];
+    let isAI = false;
+    try {
+      const raw = await generateDynamicQuiz(grade, ch?.name || QUIZ.chapterId, diff);
+      questions = raw.map(normaliseQuestion);
+      isAI = true;
+    } catch (err) {
+      console.warn('[EduMath-AI] Agnes API 失敗，切換靜態題庫：', err.message);
+      questions = generateQuestions(QUIZ.chapterId, diff);
+    }
+
+    document.querySelectorAll('.diff-btn').forEach(b => b.disabled = false);
+    showQuizLoading(false);
+
+    if (!questions.length) {
+      alert('出題失敗，請稍後再試。');
+      showQuizStep('diff');
+      return;
+    }
+
+    QUIZ.questions = questions;
+    QUIZ.answers   = new Array(questions.length).fill(null);
+    QUIZ.current   = 0;
+    QUIZ.isAI      = isAI;
+
+    const aiLabel = isAI ? ' <span class="ai-badge">&#10024; AI 出題</span>' : '';
+    document.getElementById('quiz-ch-diff-label').innerHTML =
+      `${ch?.name || ''} | ${diff}${aiLabel}`;
+
+
   ['chapter','diff','answering','result'].forEach(s=>{
     document.getElementById(`quiz-step-${s}`).style.display = s===step?'block':'none';
   });
@@ -1189,10 +1427,31 @@ document.querySelectorAll('.diff-btn').forEach(btn=>{
     QUIZ.current    = 0;
     document.getElementById('quiz-ch-diff-label').textContent =
       `${CHAPTERS.find(c=>c.id===QUIZ.chapterId)?.name} | ${QUIZ.difficulty}`;
+ main
     renderQuizQuestion();
     showQuizStep('answering');
   });
 });
+
+ feature/昕旂-技術開發
+// ── 渲染題目 + 格點導航 ──
+function renderQuizQuestion() {
+  const q     = QUIZ.questions[QUIZ.current];
+  const idx   = QUIZ.current;
+  const total = QUIZ.questions.length;
+
+  document.getElementById('quiz-progress-label').textContent = `題目 ${idx+1} / ${total}`;
+
+  // 格點導航
+  const nav = document.getElementById('quiz-dot-nav');
+  nav.innerHTML = QUIZ.questions.map((_, i) => {
+    let cls = 'q-dot';
+    if (i === idx)            cls += ' dot-current';
+    else if (QUIZ.answers[i]) cls += ' dot-answered';
+    return `<button class="${cls}" onclick="jumpToQuestion(${i})">${i+1}</button>`;
+  }).join('');
+
+  // 題目卡
 
 function renderQuizQuestion() {
   const q = QUIZ.questions[QUIZ.current];
@@ -1200,19 +1459,37 @@ function renderQuizQuestion() {
   const total = QUIZ.questions.length;
   document.getElementById('quiz-progress-label').textContent = `題目 ${idx+1} / ${total}`;
 
+ main
   const card = document.getElementById('quiz-question-card');
   card.innerHTML = `
     <span class="q-num">第 ${idx+1} 題 / 共 ${total} 題</span>
     <p class="q-text">${q.question}</p>
     <div class="q-options">
+ feature/昕旂-技術開發
+      ${q.options.map((opt, oi) => {
+        const key = ['A','B','C','D'][oi];
+        const sel = QUIZ.answers[idx] === key ? 'selected' : '';
+        const txt = opt.replace(/^[A-D][.)]\s*/, '');
+        return `<button class="q-opt ${sel}" data-key="${key}" onclick="selectAnswer('${key}')">
+          <span class="opt-key">${key}</span>${txt}
+
       ${q.options.map((opt,oi)=>{
         const key = ['A','B','C','D'][oi];
         const sel = QUIZ.answers[idx]===key ? 'selected' : '';
         return `<button class="q-opt ${sel}" data-key="${key}" onclick="selectAnswer('${key}')" ${sel?'':''}>
           <span class="opt-key">${key}</span> ${opt.replace(/^[A-D]\. /,'')}
+ main
         </button>`;
       }).join('')}
     </div>`;
+
+ feature/昕旂-技術開發
+  if (window.renderMathInElement) {
+    renderMathInElement(card, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+  document.getElementById('btn-quiz-prev').disabled               = idx === 0;
+  document.getElementById('btn-quiz-next').style.display          = idx < total-1 ? 'inline-block' : 'none';
+  document.getElementById('btn-quiz-submit').style.display        = idx === total-1 ? 'inline-block' : 'none';
 
   // Re-render math
   if(window.renderMathInElement) {
@@ -1226,10 +1503,38 @@ function renderQuizQuestion() {
   prevBtn.disabled   = idx===0;
   nextBtn.style.display   = idx<total-1 ? 'inline-block' : 'none';
   submitBtn.style.display = idx===total-1 ? 'inline-block' : 'none';
+ main
 }
 
 function selectAnswer(key) {
   QUIZ.answers[QUIZ.current] = key;
+ feature/昕旂-技術開發
+  renderQuizQuestion();
+}
+
+function jumpToQuestion(i) {
+  QUIZ.current = i;
+  renderQuizQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('btn-quiz-prev').addEventListener('click', () => {
+  if (QUIZ.current > 0) { QUIZ.current--; renderQuizQuestion(); }
+});
+document.getElementById('btn-quiz-next').addEventListener('click', () => {
+  if (QUIZ.current < QUIZ.questions.length-1) { QUIZ.current++; renderQuizQuestion(); }
+});
+
+document.getElementById('btn-quiz-submit').addEventListener('click', () => {
+  // 儲存題目摘要到歷史（AI 去重用）
+  APP.addHistory(
+    QUIZ.questions.map(q => ({
+      question:   (q.question || '').substring(0, 80),
+      chapter:    CHAPTERS.find(c => c.id === QUIZ.chapterId)?.name || QUIZ.chapterId,
+      difficulty: QUIZ.difficulty,
+    }))
+  );
+
   // re-render to show selection
   renderQuizQuestion();
 }
@@ -1241,11 +1546,56 @@ document.getElementById('btn-quiz-next').addEventListener('click',()=>{
   if(QUIZ.current<QUIZ.questions.length-1){ QUIZ.current++; renderQuizQuestion(); }
 });
 document.getElementById('btn-quiz-submit').addEventListener('click',()=>{
+ main
   const { correct, total } = APP.addResult(QUIZ.chapterId, QUIZ.questions, QUIZ.answers);
   renderQuizResult(correct, total);
   showQuizStep('result');
   updateDashboardStats();
 });
+ feature/昕旂-技術開發
+document.getElementById('btn-quiz-again').addEventListener('click', () => showQuizStep('chapter'));
+
+// ── 結果頁 ──
+function renderQuizResult(correct, total) {
+  const rate = Math.round(correct / total * 100);
+  const msgs = [
+    [90, '太棒了！你掌握得非常好！'],
+    [70, '做得不錯！繼續加油！'],
+    [50, '還有進步空間，複習一下吧！'],
+    [0,  '別氣餒，多練習就會進步的！']
+  ];
+  document.getElementById('result-score').textContent = `${correct} / ${total}`;
+  document.getElementById('result-rate').textContent  = `${rate}%`;
+  document.getElementById('result-msg').textContent   = msgs.find(([m]) => rate >= m)?.[1] || msgs[3][1];
+
+  // 正誤概覽格點
+  document.getElementById('result-summary-row').innerHTML = QUIZ.questions.map((q, i) => {
+    const ua = QUIZ.answers[i];
+    const ok = ua === q.answer;
+    const cls  = !ua ? 'rsq-dot rsq-skip' : ok ? 'rsq-dot rsq-correct' : 'rsq-dot rsq-wrong';
+    const icon = !ua ? '&#8212;' : ok ? '&#10003;' : '&#10007;';
+    return `<div class="${cls}" title="第${i+1}題">${i+1}<br><span style="font-size:.65rem">${icon}</span></div>`;
+  }).join('');
+
+  // 各題詳情
+  const aiLabel = QUIZ.isAI ? ' <span class="ai-badge">&#10024; AI 出題</span>' : '';
+  const detail = document.getElementById('result-detail');
+  detail.innerHTML = `<p style="font-size:.875rem;font-weight:700;color:var(--gray-600);margin-bottom:12px;">各題詳情${aiLabel}</p>`;
+
+  QUIZ.questions.forEach((q, i) => {
+    const ua      = QUIZ.answers[i];
+    const isRight = ua === q.answer;
+    const userTxt = q.options.find(o => o.startsWith(ua || '')) || ua || '（未作答）';
+    const corrTxt = q.options.find(o => o.startsWith(q.answer)) || q.answer;
+
+    const item = document.createElement('div');
+    item.className = 'result-item';
+    item.innerHTML = `
+      <div class="result-item-header" onclick="toggleDetail(this)">
+        <span class="result-status ${isRight ? 'status-correct' : 'status-wrong'}">${isRight ? '&#10003; 正確' : '&#10007; 錯誤'}</span>
+        <span class="result-q-text">第 ${i+1} 題</span>
+        <span style="color:var(--gray-400);font-size:.9rem;">&#9660;</span>
+
 document.getElementById('btn-quiz-again').addEventListener('click',()=>showQuizStep('chapter'));
 
 function renderQuizResult(correct, total) {
@@ -1275,10 +1625,21 @@ function renderQuizResult(correct, total) {
         <span class="result-status ${isRight?'status-correct':'status-wrong'}">${isRight?'✓ 正確':'✗ 錯誤'}</span>
         <span class="result-q-text">第 ${i+1} 題</span>
         <span style="color:var(--gray-400);font-size:.9rem;">▼</span>
+ main
       </div>
       <div class="result-detail-body">
         <div class="detail-label">題目</div>
         <div class="detail-val">${q.question}</div>
+ feature/昕旂-技術開發
+        ${!isRight ? `
+          <div class="detail-label">你的答案</div>
+          <div class="detail-val detail-wrong">${userTxt}</div>
+          <div class="detail-label">正確答案</div>
+          <div class="detail-val detail-right">${corrTxt}</div>
+        ` : ''}
+        <div class="detail-label">AI 詳細解說</div>
+        <div class="detail-steps">${q.steps || q.explanation || '（無解說）'}</div>
+
         ${!isRight?`
           <div class="detail-label">你的答案</div>
           <div class="detail-val detail-wrong">${userAns||'（未作答）'}. ${q.options.find(o=>o.startsWith(userAns||''))||''}</div>
@@ -1287,20 +1648,32 @@ function renderQuizResult(correct, total) {
         `:''}
         <div class="detail-label">解題步驟</div>
         <div class="detail-steps">${q.steps}</div>
+ main
       </div>`;
     detail.appendChild(item);
   });
 
+ feature/昕旂-技術開發
+  if (window.renderMathInElement) {
+
   if(window.renderMathInElement) {
+ main
     renderMathInElement(detail, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
   }
 }
 
 function toggleDetail(header) {
+ feature/昕旂-技術開發
+  const body  = header.nextElementSibling;
+  const arrow = header.querySelector('span:last-child');
+  body.classList.toggle('open');
+  arrow.innerHTML = body.classList.contains('open') ? '&#9650;' : '&#9660;';
+
   const body = header.nextElementSibling;
   const arrow = header.querySelector('span:last-child');
   body.classList.toggle('open');
   arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+ main
 }
 
 // ═══════════════════════════════════════════════════════

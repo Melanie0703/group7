@@ -270,10 +270,24 @@ function selectCount(n) {
 // ============================================================
 // 開始測驗
 // ============================================================
+ feature/昕旂-技術開發
+async function startQuiz() {
+  if (!currentUnit || !quizMode || !quizCount) return;
+
+  // 顯示載入提示
+  showToast('⏳ 正在準備題目…', 4000);
+
+  // 優先嘗試 AI 動態出題，失敗時自動 fallback 至靜態題庫
+  quizQuestions = (typeof buildAIQuizQuestions === 'function')
+    ? await buildAIQuizQuestions(currentUnit.id, quizMode, quizCount)
+    : buildQuizQuestions(currentUnit.id, quizMode, quizCount);
+
+
 function startQuiz() {
   if (!currentUnit || !quizMode || !quizCount) return;
 
   quizQuestions = buildQuizQuestions(currentUnit.id, quizMode, quizCount);
+ main
   if (quizQuestions.length === 0) {
     showToast('⚠️ 題庫題目不足，請稍後再試');
     return;
@@ -289,6 +303,25 @@ function startQuiz() {
   showPage('quiz');
 }
 
+ feature/昕旂-技術開發
+// 靜態抽題演算法（保留供 legacy 相容；主流程已改用 buildAIQuizQuestions）
+function buildQuizQuestions(unitId, mode, total) {
+  return (typeof _buildStaticQuizQuestions === 'function')
+    ? _buildStaticQuizQuestions(unitId, mode, total)
+    : [];
+}
+
+function sample(arr, n) {
+  return (typeof _sampleQuestions === 'function')
+    ? _sampleQuestions(arr, n)
+    : arr.slice(0, n);
+}
+
+function shuffle(arr) {
+  return (typeof _shuffleQuestions === 'function')
+    ? _shuffleQuestions(arr)
+    : arr;
+=======
 // 抽題演算法
 function buildQuizQuestions(unitId, mode, total) {
   const bank = QUESTION_BANK[unitId];
@@ -333,6 +366,7 @@ function shuffle(arr) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+ main
 }
 
 // ============================================================
@@ -495,9 +529,9 @@ function submitAllAnswers() {
   finishQuiz();
 }
 
-// ============================================================
+// 
 // 測驗結束
-// ============================================================
+// 
 function finishQuiz() {
   const elapsed = Math.round((Date.now() - quizStartTime) / 1000);
   const totalQ = quizResults.length;
@@ -506,6 +540,19 @@ function finishQuiz() {
   const pct = Math.round(correctN / totalQ * 100);
   const score = pct;
 
+ feature/昕旂-技術開發
+  // 儲存本次題目摘要到歷史（用於 AI 去重）
+  Storage.addQuizHistory(
+    quizQuestions.map(q => ({
+      id: q.id,
+      question: q.question ? q.question.substring(0, 80) : '',
+      unit: q.unit || currentUnit.name,
+      difficulty: q._diff || q.difficulty || quizMode,
+    }))
+  );
+
+
+ main
   // 更新進度
   Storage.updateProgress(currentUnit.id, correctN, totalQ);
   Storage.addHistory({
